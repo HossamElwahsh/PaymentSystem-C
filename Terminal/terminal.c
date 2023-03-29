@@ -80,71 +80,62 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 
  EN_terminalError_t getTransactionDate(ST_terminalData_t *termData)
  {
-    uint8_t i = 0;
-	uint8_t day = 0;
-	uint8_t month = 0;
-	uint16_t year = 0; 
+     uint8_t i = 0;
+     uint8_t day = 0;
+     uint8_t month = 0;
+     uint16_t year = 0;
 
-	/* Read Date */
-    printf("Please enter transaction date: ");
-	gets(termData->transactionDate);
+     /* Read Date */
+     printf("Please enter transaction date: ");
+     gets(termData->transactionDate);
 
-	/* Validate Date Length*/
-    if(strlen(termData->transactionDate) != 10)
-    {
-        return WRONG_DATE;
-    }
+     /* Validate Date Length*/
+     if(strlen(termData->transactionDate) != 10)
+     {
+         return WRONG_DATE;
+     }
 
-	/* Validate Date Format */ 
-	if(termData->transactionDate[2] != '/' || termData->transactionDate[5] != '/')
-	{
-		WrongName = getTransactionAmount(&MyTerminalData);
-		printf("\nTest Case_%d: \n",i);
-		printf("Input Data: %f\n",MyTerminalData.maxTransAmount);
-		printf("Expected Result: Your transaction amount should be greater than Zero\n");
-		if( WrongName == INVALID_AMOUNT )
-		{
-			printf("Actual Result: %s\n",WrongString);
-		}
-		else
-			printf("Actual Result: Your operation is done\n");
-	}
-	
-	/* Validate Day */
-	day = termData->transactionDate[0] - '0';
-	day = (day*10) + (termData->transactionDate[1] - '0');
-		
-	if(day<1 || day>31)
-	{
-		return WRONG_DATE;
-	}
-	
-	/* Validate Month */
-	month = termData->transactionDate[3] - '0';
-	month = (month*10) + (termData->transactionDate[4] - '0');
-		
-	if(month<1 || month>12)
-	{
-		return WRONG_DATE;
-	}
-	
-	if(month==2 && day>29)
-	{
-		return WRONG_DATE;
-	}
-	
-	/* Validate Year */
-	year = termData->transactionDate[6] - '0';
-	year = (year*10) + (termData->transactionDate[7] - '0');
-	year = (year*10) + (termData->transactionDate[8] - '0');
-	year = (year*10) + (termData->transactionDate[9] - '0');
-		
-	if(year<1900 || year>2100)
-	{
-		return WRONG_DATE;
-	}
+     /* Validate Date Format */
+     if(termData->transactionDate[2] != '/' || termData->transactionDate[5] != '/')
+     {
+         return WRONG_DATE;
+     }
 
-	return TERMINAL_OK;
+     /* Validate Day */
+     day = termData->transactionDate[0] - '0';
+     day = (day*10) + (termData->transactionDate[1] - '0');
+
+     if(day<1 || day>31)
+     {
+         return WRONG_DATE;
+     }
+
+     /* Validate Month */
+     month = termData->transactionDate[3] - '0';
+     month = (month*10) + (termData->transactionDate[4] - '0');
+
+     if(month<1 || month>12)
+     {
+         return WRONG_DATE;
+     }
+
+     if(month==2 && day>29)
+     {
+         return WRONG_DATE;
+     }
+
+     /* Validate Year */
+     year = termData->transactionDate[6] - '0';
+     year = (year*10) + (termData->transactionDate[7] - '0');
+     year = (year*10) + (termData->transactionDate[8] - '0');
+     year = (year*10) + (termData->transactionDate[9] - '0');
+
+     if(year<1900 || year>2100)
+     {
+         return WRONG_DATE;
+     }
+
+     return TERMINAL_OK;
  }
 
 /* ********************** Main Terminal Functions End ********************************************** */
