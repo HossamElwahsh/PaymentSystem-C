@@ -16,6 +16,7 @@
 /* ********************** typedef Start *********************************************************** */
 
  typedef unsigned char uint8_t;
+ typedef unsigned short uint16_t;
 
  typedef struct ST_terminalData_t
  {
@@ -58,6 +59,7 @@
     uint8_t i = 0;
 	uint8_t day = 0;
 	uint8_t month = 0;
+	uint16_t year = 0; 
 
 	/* Read Date */
     printf("Please enter transaction date: ");
@@ -97,8 +99,17 @@
 	{
 		return WRONG_DATE;
 	}
-
-
+	
+	/* Validate Year */
+	year = termData->transactionDate[6] - '0';
+	year = (year*10) + (termData->transactionDate[7] - '0');
+	year = (year*10) + (termData->transactionDate[8] - '0');
+	year = (year*10) + (termData->transactionDate[9] - '0');
+		
+	if(year<1900 || year>2100)
+	{
+		return WRONG_DATE;
+	}
 
 	return TERMINAL_OK;
  }
@@ -120,7 +131,7 @@
 	printf("Function name   : getTransactionDate\n\n");
 	
 	printf("Test Case 1:\n");
-	printf("Input Data      : 30/2/2022\n");
+	printf("Input Data      : 01/02/zzzz\n");
 	printf("Expected Result : WRONG_DATE\n");
 	printf("Actual Result   : ");
 	
