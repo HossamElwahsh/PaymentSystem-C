@@ -92,6 +92,11 @@
 	{
 		return WRONG_DATE;
 	}
+	
+	if(month==2 && day>29)
+	{
+		return WRONG_DATE;
+	}
 
 
 
@@ -115,7 +120,7 @@
 	printf("Function name   : getTransactionDate\n\n");
 	
 	printf("Test Case 1:\n");
-	printf("Input Data      : 30/13/2022\n");
+	printf("Input Data      : 30/2/2022\n");
 	printf("Expected Result : WRONG_DATE\n");
 	printf("Actual Result   : ");
 	
