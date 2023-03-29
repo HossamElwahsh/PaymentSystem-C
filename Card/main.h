@@ -26,7 +26,7 @@
   *						Include the module header files
   */
   /**************************************************************************************************************************************/
-#include"project_types.h"
+#include <stdint.h>
 #include"card.h"
 
 #include"terminal.h"

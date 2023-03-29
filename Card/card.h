@@ -17,7 +17,9 @@
 #define CARD_H_
 
 
-#include"project_types.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
 
 /**************************************************************************************************************************************/
 /*
@@ -27,9 +29,10 @@
 typedef struct ST_cardData_t
 {
 	uint8_t cardHolderName[25];
-	uint8_t primaryAccountNumber[29];
+	uint8_t primaryAccountNumber[20];
 	uint8_t cardExpirationDate[6];
 }ST_cardData_t;
+
 /***************************************************************************************************************************************/
 /*
 * Defines four errors which specify the error kind.
@@ -39,16 +42,15 @@ typedef enum EN_cardError_t
 {
 	CARD_OK, WRONG_NAME, WRONG_EXP_DATE, WRONG_PAN
 }EN_cardError_t;
+
 /**************************************************************************************************************************************/
 /*
 *							Prototypes for all used functions inside the card module.
 */
 /**************************************************************************************************************************************/
-EN_cardError_t getCardHolderName(ST_cardData_t *cardData);
-
-EN_cardError_t getCardExpiryDate(ST_cardData_t *cardDate);
-
-EN_cardError_t getCardPan(ST_cardData_t *cardData);
+ EN_cardError_t getCardHolderName(ST_cardData_t *cardData);
+ EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData);
+ EN_cardError_t getCardPAN(ST_cardData_t *cardData);
 
 /**************************************************************************************************************************************/
 /*
@@ -59,9 +61,6 @@ EN_cardError_t getCardPan(ST_cardData_t *cardData);
 void getCardHolderNameTest(void);
 
 #endif /* CARD_H_ */
-
-
-
 
 
 
