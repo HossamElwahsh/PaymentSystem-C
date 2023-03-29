@@ -63,7 +63,7 @@ enum EN_terminalError_t
     printf("Please enter transaction date: ");
 	gets(termData->transactionDate);
 
-	/* Validate Data Length*/
+	/* Validate Date Length*/
     if(strlen(termData->transactionDate) != 10)
     {
         return WRONG_DATE;
@@ -124,14 +124,93 @@ enum EN_terminalError_t
 
 	printf("\n");
 	printf("Tester name     : Tarek Gohry\n");
-	printf("Function name   : getTransactionDate\n\n");
+	printf("Function name   : getTransactionDate\n");
 	
-	
-	termError = getTransactionDate(&termData);
-	
-	printf("Test Case 1:\n");
-	printf("Input Data      : 01/02/zzzz\n");
+	/* Test Date Format Length */
+	printf("\nTest Case 1:\n");
+	printf("Input Data      : 01/02\n");
 	printf("Expected Result : WRONG_DATE\n");
+	termError = getTransactionDate(&termData);
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+	
+	/* Test Year Format */
+	printf("\nTest Case 2:\n");
+	printf("Input Data      : 01/12/2022222\n");
+	printf("Expected Result : WRONG_DATE\n");
+	termError = getTransactionDate(&termData);
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+	
+	/* Test Day Format */
+	printf("\nTest Case 3:\n");
+	printf("Input Data      : 33/02/2022\n");
+	printf("Expected Result : WRONG_DATE\n");
+	termError = getTransactionDate(&termData);
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+	
+	/* Test Month Format */
+	printf("\nTest Case 4:\n");
+	printf("Input Data      : 02/15/2022\n");
+	printf("Expected Result : WRONG_DATE\n");
+	termError = getTransactionDate(&termData);
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+	
+	/* Test Year Format */
+	printf("\nTest Case 5:\n");
+	printf("Input Data      : 02/12/20az\n");
+	printf("Expected Result : WRONG_DATE\n");
+	termError = getTransactionDate(&termData);
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+	
+	/* Test Correct Date Format*/
+	printf("\nTest Case 6:\n");
+	printf("Input Data      : 01/02/2022\n");
+	printf("Expected Result : TERMINAL_OK\n");
+	termError = getTransactionDate(&termData);
 	printf("Actual Result   : ");
 	
     if(termError == WRONG_DATE)
