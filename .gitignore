@@ -61,3 +61,5 @@ dkms.conf
 .idea/dataSources/
 .idea/dataSources.local.xml
 cmake-build-debug
+
+test*
