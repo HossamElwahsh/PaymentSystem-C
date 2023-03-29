@@ -10,23 +10,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "terminal.h"
 /* ********************** Includes Section End   ********************** */
 
 
-/* ********************** typedef Start *********************************************************** */
+/* ********************** structs and Enums Start *********************************************************** */
 
- typedef unsigned char uint8_t;
- typedef unsigned short uint16_t;
-
- typedef struct ST_terminalData_t
+ struct ST_terminalData_t
  {
      float transAmount;
      float maxTransAmount;
      uint8_t transactionDate[11];
 
- }ST_terminalData_t;
+ };
 
- typedef enum EN_terminalError_t
+enum EN_terminalError_t
  {
      TERMINAL_OK,
      WRONG_DATE,
@@ -36,9 +34,9 @@
      EXCEED_MAX_AMOUNT,
      INVALID_MAX_AMOUNT
 
- }EN_terminalError_t;
+ };
 
-/* ********************** typedef End ************************************************************** */
+/* ********************** structs and Enums Start *********************************************************** */
 
 
 /* ********************** Main Terminal Functions Start ******************************************** */
@@ -124,11 +122,12 @@
     ST_terminalData_t termData;
     EN_terminalError_t termError;
 
-    termError = getTransactionDate(&termData);
-	
 	printf("\n");
 	printf("Tester name     : Tarek Gohry\n");
 	printf("Function name   : getTransactionDate\n\n");
+	
+	
+	termError = getTransactionDate(&termData);
 	
 	printf("Test Case 1:\n");
 	printf("Input Data      : 01/02/zzzz\n");
