@@ -62,6 +62,21 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 /* ********************** structs and Enums Start *********************************************************** */
 
 
+ ******************************************************************************************************
+ * @file           : terminal.c
+ * @author         : Team 1
+ * @brief          : Contains the functionality of terminal
+ ******************************************************************************************************
+ */
+
+/* ********************** Includes Section Start ********************** */
+/* Card Module */
+#include "../Card/card.h"
+/* Terminal Module */
+#include "terminal.h"
+/* ********************** Includes Section End   ********************** */
+
+
 /* ********************** Main Terminal Functions Start ******************************************** */
 
  /*
@@ -149,12 +164,101 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
     if(maxAmount > 0) {
         termData->maxTransAmount = maxAmount;
         return TERMINAL_OK;
+ /*
+ Name: isCardExpired
+ Input: Card Data structure, Terminal Data structure
+ Output: EN_terminalError_t Error or No Error
+ Description: 1. This function compares the card expiry date with the transaction date.
+			  2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
+				 else return TERMINAL_OK.
+*/
+EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *termData)
+{
+	/* Define local variable to set the error state, No Error */
+	EN_terminalError_t Loc_ErrorState = TERMINAL_OK;
+	/* Define local variable to store month on Card */
+	uint8_t Loc_CardMonth = ((cardData->cardExpirationDate[0] - '0') * 10) + (cardData->cardExpirationDate[1] - '0');
+	/* Define local variable to store year on Card */
+	uint8_t Loc_CardYear  = ((cardData->cardExpirationDate[3] - '0') * 10) + (cardData->cardExpirationDate[4] - '0');
+	/* Define local variable to store month of transaction */
+	uint8_t Loc_TransMonth = ((termData->transactionDate[3] - '0') * 10) + (termData->transactionDate[4] - '0');
+	/* Define local variable to store year of transaction */
+	uint8_t Loc_TransYear  = ((termData->transactionDate[8] - '0') * 10) + (termData->transactionDate[9] - '0');
+
+	/* Check 1: cardYear < transYear */
+	if (Loc_CardYear < Loc_TransYear)
+	{
+		/* Update error state, Expired Card! */
+		Loc_ErrorState = EXPIRED_CARD;
+	}
+	/* Check 2: cardYear >= transYear */
+	else
+	{
+		/* Check 2.1: cardMonth < TransMonth */
+		if (Loc_CardYear == Loc_TransYear && Loc_CardMonth < Loc_TransMonth)
+		{
+			/* Update error state, Expired Card! */
+			Loc_ErrorState = EXPIRED_CARD;
+		}
+	}
+
+	return Loc_ErrorState;
+}
+
+/* ********************** Main Terminal Functions End ********************************************** */
+
+
+/* ********************** TEST Functions Start ***************************************************** */
+
+ void getTransactionDateTest(void)
+ {
+    ST_terminalData_t termData;
+    EN_terminalError_t termError;
+
+    termError = getTransactionDate(&termData);
+	
+	printf("\n");
+	printf("Tester name     : Tarek Gohry\n");
+	printf("Function name   : getTransactionDate\n\n");
+	
+	printf("Test Case 1:\n");
+	printf("Input Data      : 01/02/zzzz\n");
+	printf("Expected Result : WRONG_DATE\n");
+	printf("Actual Result   : ");
+	
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
     }
     else
     {
         return INVALID_MAX_AMOUNT;
     }
 
+ void isCardExpired(void)
+ {
+	/* Variables to be used */
+    ST_cardData_t     cardData;
+    ST_terminalData_t terminalData;
+	
+	printf("\n");
+	printf("Tester name     : Abdelrhman Walaa\n");
+	printf("Function name   : isCardExpired\n\n");
+
+	printf("Test Case 1:\n");
+	printf("Input Data      : \n");
+	printf("Expected Result : EXPIRED_CARD\n");
+	printf("Actual Result   : ");
+
+ }
+
+
+/* ********************** TEST Functions End  ***************************************************** */
+
+
+int main()
+{
+    getTransactionDateTest();
 }
 
 /**
