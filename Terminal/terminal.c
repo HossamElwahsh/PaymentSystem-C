@@ -135,4 +135,26 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
      return TERMINAL_OK;
  }
 
+/**
+ * This function takes the maximum allowed amount and stores it into terminal data
+ * Note:
+ * - Transaction max amount is a float number
+ * @param termData [in,out] terminal data
+ * @param maxAmount [in] max transaction amount
+ * @return INVALID_MAX_AMOUNT if max amount is less than or equal zero
+ * @return TERMINAL_OK otherwise
+ */
+EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
+{
+    if(maxAmount > 0) {
+        termData->maxTransAmount = maxAmount;
+        return TERMINAL_OK;
+    }
+    else
+    {
+        return INVALID_MAX_AMOUNT;
+    }
+
+}
+
 /* ********************** Main Terminal Functions End ********************************************** */

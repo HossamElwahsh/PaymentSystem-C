@@ -28,5 +28,6 @@ void getCardPANTest(void);
 /******************** TERMINAL MODULE ********************/
 void getTransactionDateTest();
 void getTransactionAmountTest(void);
+void setMaxAmountTest(void);
 
 #endif //PAYMENTSYSTEM_TEST_H
