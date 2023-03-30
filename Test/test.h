@@ -16,7 +16,7 @@
  * @param test_dir [in] main test dir
  * @param testFilename [out] full filename for the file requested
  */
-void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType);
+//void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType);
 
 
 
