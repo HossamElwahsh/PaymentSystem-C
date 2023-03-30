@@ -122,7 +122,7 @@ void getTransactionAmountTest(void)
 
 }
 
-void getTransactionDateTest(void)
+void getTransactionDateTest_old(void)
 {
     ST_terminalData_t termData;
     EN_terminalError_t termError;
@@ -226,6 +226,81 @@ void getTransactionDateTest(void)
     {
         printf("TERMINAL_OK\n");
     }
+}
+
+/***
+ * Runs test cases for getCardPan
+ */
+void getTransactionDateTest(void) {
+    // test cases init
+    char *test_cases_filename = CONCAT(TEST_DIR, "getTransactionDate.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    char testCase[256];
+
+    ST_terminalData_t *terminalData = calloc(1, sizeof(ST_terminalData_t));
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tTarek Gohary\n");
+    printf("Function Name:\tgetTransactionDate\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE *fp_test_cases;
+    int i = 0;
+
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        FILE *fp_fake_stdin;
+        char *inputData;
+        char *expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data: %s\n", inputData);
+        printf("Expected: %s\n", expectedResult);
+
+        /************* push input data to stdin ***************/
+        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+        fprintf(fp_fake_stdin, "%s\n", inputData);
+        rewind(fp_fake_stdin);
+
+        /************* Execute test case ***************/
+        EN_terminalError_t ret = getTransactionDate(terminalData);
+        // turn on console logs
+
+        printf("Actual Result: ");
+        switch (ret) {
+            case WRONG_DATE:
+                printf("WRONG_DATE OK\n");
+                break;
+            case TERMINAL_OK:
+                printf("TERMINAL_OK\n");
+                break;
+        }
+
+        fclose(fp_fake_stdin);
+        i++; // next test case
+    }
+
+    free(terminalData);
+    fclose(fp_test_cases);
 }
 
 /**
