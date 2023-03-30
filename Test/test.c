@@ -297,6 +297,83 @@ void setMaxAmountTest(void) {
 
 
 /**
+ * Runs test cases for isValidCardPAN()
+ */
+
+void isValidCardPANTest(void) {
+    // test cases init
+    char *test_cases_filename = CONCAT(TEST_DIR, "isValidCardPAN.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
+    char testCase[256];
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tHossam Elwahsh\n");
+    printf("Function Name:\tisValidCardPAN\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE *fp_test_cases;
+    int i = 0;
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        char *inputData;
+        char *expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data: %s\n", inputData);
+        printf("Expected: %s\n", expectedResult);
+
+        // clear data
+        for (int j = 0; j < sizeof (cardData->primaryAccountNumber); ++j) {
+            cardData->primaryAccountNumber[j] = 0;
+        }
+
+        // set test case input
+        for (int j = 0; j < strlen(inputData); ++j) {
+            cardData->primaryAccountNumber[j] = inputData[j];
+        }
+
+        /************* Execute test case ***************/
+        EN_terminalError_t ret = isValidCardPAN(cardData);
+
+        printf("Actual Result: ");
+        switch (ret) {
+            case TERMINAL_OK:
+                printf("TERMINAL_OK\n");
+                break;
+            case INVALID_CARD:
+                printf("INVALID_CARD\n");
+                break;
+        }
+
+        i++; // next test case
+    }
+
+    free(cardData);
+    fclose(fp_test_cases);
+}
+
+
+/**
  * Call this from main.c to test all project modules
  */
 void testAll()
