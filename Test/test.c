@@ -1,5 +1,4 @@
 #include <io.h>
-#include <fcntl.h>
 #include "test.h"
 
 /**
@@ -8,7 +7,7 @@
  * @param i [in] test case number (0 indexed)
  * @param test_dir [in] main test dir
  * @param testFilename [out] full filename for the file requested
- */
+ *//*
 void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType)
 {
     if(fileType)
@@ -18,18 +17,18 @@ void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileTy
         sprintf(testFilename, "%s%d_ex", test_dir, i+1);
     }
 //    printf("filename: %s\n", testFilename);
-}
+}*/
 
 /***
  * Runs test cases for getCardPan
  */
+/*
 void getCardPANTest(void)
 {
     // test init
     int testCasesCount = 3;
-    char test_input_data_filename[50];
     char test_expected_result_filename[50];
-    char * test_dir = CONCAT(TEST_DIR, "getCardPan_");
+    char * test_dir = CONCAT(TEST_DIR, "getCardPan.csv");
 
     // test case data
     char inputData[25];
@@ -51,10 +50,9 @@ void getCardPANTest(void)
         FILE *fp_input_data;
         FILE *fp_expected_result;
 
-        getTestFileName(i, test_dir, test_input_data_filename, 1);
 
         // redirect test case inputData to stdin
-        fp_input_data = freopen(test_input_data_filename, "r", stdin);
+        fp_input_data = freopen(test_dir, "r", stdin);
 
         // read test case inputData
         fgets(inputData, sizeof(inputData), fp_input_data);
@@ -70,7 +68,9 @@ void getCardPANTest(void)
         printf("Expected Result: %s\n", expectedResult);
         fclose(fp_expected_result);
 
-        /************* Execute test case ***************/
+        */
+/************* Execute test case ***************//*
+
         EN_cardError_t ret = getCardPAN(cardData);
         // turn on console logs
 
@@ -87,9 +87,107 @@ void getCardPANTest(void)
         fclose(fp_input_data);
     }
 }
-/*********************************************************
- * ******************* TERMINAL MODULE *******************
- * ********************************************************/
+*/
+
+void getCardPANTest_Fix(void)
+{
+    // test cases init
+    char * test_cases_filename = CONCAT(TEST_DIR, "getCardPan.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    char testCase[256];
+
+    ST_cardData_t * cardData = calloc(1, sizeof(ST_cardData_t));
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tHossam Elwahsh\n");
+    printf("Function Name:\tgetCardPan\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+        FILE *fp_test_cases;
+        int i = 0;
+
+
+        // redirect test case inputData to stdin
+        fp_test_cases = fopen(test_cases_filename, "r");
+
+        // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+        while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+            // split test case into tokens of input data & expected result (which was delimited by comma)
+
+            FILE *fp_fake_stdin;
+            char * inputData;
+            char * expectedResult;
+
+            printf("\n-----------------------\n");
+            printf("Test Case %d\n", i+1);
+            printf("-----------------------\n");
+
+            inputData = strtok(testCase, testCaseDelimiter);
+            expectedResult = strtok(NULL, testCaseDelimiter);
+
+            printf("Input Data: %s\n", inputData);
+            printf("Expected: %s\n", expectedResult);
+
+            /************* push input data to stdin ***************/
+//            fputs(inputData, stdin);
+//            fprintf(stdin, "%s\n", inputData);
+            fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+            fprintf(fp_fake_stdin, "%s\n", inputData);
+            rewind(fp_fake_stdin);
+
+            /************* Execute test case ***************/
+            EN_cardError_t ret = getCardPAN(cardData);
+            // turn on console logs
+
+            printf("Actual Result: ");
+            switch (ret) {
+                case CARD_OK:
+                    printf("CARD OK\n");
+                    break;
+                case WRONG_PAN:
+                    printf("WRONG_PAN\n");
+                    break;
+            }
+
+            fclose(fp_fake_stdin);
+            i++; // next test case
+        }
+
+    fclose(fp_test_cases);
+
+        // print inputData data
+
+
+        // read and print expected result
+        /*getTestFileName(i, test_dir, test_expected_result_filename, 0);
+        fp_expected_result = fopen(test_expected_result_filename, "r");
+        fgets(expectedResult, sizeof(expectedResult), fp_expected_result);
+        printf("Expected Result: %s\n", expectedResult);
+        fclose(fp_expected_result);
+
+        *//*
+
+
+        fclose(fp_test_cases);*/
+//    }
+}
+
+int main()
+{
+    getCardPANTest_Fix();
+}
+
+
+/** *******************************************************
+    ******************* TERMINAL MODULE *******************
+    *******************************************************/
 
 void getTransactionAmountTest(void)
 {
