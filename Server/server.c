@@ -63,5 +63,27 @@ ST_transaction_t transactionsDB[255];
  }
  
  /***********************************************************************************************************************/
- 
- 
+
+/***********************************************************************************************************************/
+
+/**
+* @author         : Tarek Gohry
+* @brief          : Store all transaction data in the transaction database
+* Description     :
+   - It gives a sequence number to a transaction
+   - This number is incremented once a transaction is processed into the server
+   - Must check the last sequence number in the server to give the new transaction a new sequence number
+   - It saves ant type of a transaction. APPROVED, DECLINED_INSUFFECIENT_FUND, DECLINED_STOLEN_CARD,
+     FRUAD_CARD, INTERNAL_SERVER_ERROR
+   - List all saved transactions using the listSavedTransactions function
+* Return          :
+   - SERVER_OK, Assuming that the connection between the terminal and server is always connected
+*/
+
+EN_serverError_t saveTransaction(ST_transaction_t *transData)
+{
+    
+}
+
+
+/***********************************************************************************************************************/
