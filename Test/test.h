@@ -2,9 +2,9 @@
 #define PAYMENTSYSTEM_TEST_H
 
 #include <stdlib.h>
-#include "card.h"
-#include "terminal.h"
-#include "server.h"
+#include "../Card/card.h"
+#include "../Terminal/terminal.h"
+#include "../Server/server.h"
 
 #define TEST_DIR "../Test/TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
