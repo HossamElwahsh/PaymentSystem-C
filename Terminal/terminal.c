@@ -138,6 +138,31 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
      return TERMINAL_OK;
  }
 
+
+
+
+
+
+
+ /*****************************************************************************************/
+ /*    Function Description    : This function compares the transaction amount with the terminal max allowed amount. */
+ /*    Parameter in            : ST_terminalData_t* termData */
+ /*    Parameter inout         : None */
+ /*    Parameter out           : None */
+ /*    Return value            : return EXCEED_MAX_AMOUNT If the transaction amount is larger than the terminal max allowed amount
+ *                               return TERMINAL_OK otherwise;
+ /*    Requirment              : None */
+ /*****************************************************************************************/
+ EN_terminalError_t isBelowMaxAmount(ST_terminalData_t* termData)
+ {
+     if (termData->transAmount > termData->maxTransAmount)
+         return EXCEED_MAX_AMOUNT;
+     return TERMINAL_OK;
+ }
+
+
+
+
 /* ********************** Main Terminal Functions End ********************************************** */
 
 
@@ -268,6 +293,43 @@ void getTransactionAmountTest(void)
         printf("TERMINAL_OK\n");
     }
  }
+
+
+ /*****************************************************************************************/
+ /*    Function Description    : test all possible scenarios, happy-case, and worst-case scenarios. on isBelowMaxAmount function*/
+ /*    Parameter in            : None */
+ /*    Parameter inout         : None */
+ /*    Parameter out           : None */
+ /*    Return value            : None */
+ /*    Requirment              : None */
+ /*
+ * Test casese 1000 , 1500 , 2000 , 2500 ,3000 , 3500 , 4000 , 4500 , 5000 , 5500 , 6000 , 6500 , 7000 , 7500 , 8000 , 8500 , 9000
+ *             9500 , 10000 , 10500 , 11000
+ * max_amount set to 8000 
+ */
+ /*****************************************************************************************/
+void isBelowMaxAmountTest(void)
+{
+    static char counter;
+    ST_terminalData_t termData[20];
+    EN_terminalError_t error = TERMINAL_OK;
+    termData[counter].maxTransAmount = 8000.0;
+    termData[counter].transAmount = 1000.0 + (500.0 * counter);
+    error = isBelowMaxAmount(&termData[counter]);
+    printf("Tester Name: Matarawy\n");
+    printf("Test case : %d\n", counter + 1);
+    printf("Input Data: maxTransAmount = 8000 and transAmount = %2.f\n", termData[counter].transAmount);
+    if (error == EXCEED_MAX_AMOUNT)
+        printf("Expected Result: Your amount is more than the max amount\n");
+    else
+        printf("Expected Result: Your amount is OK\n");
+    if (error == TERMINAL_OK)
+        printf("Actual Result: Your amount is OK\n\n\n\n");
+    else
+        printf("Actual Result:  amount is more than the max amount \n\n\n\n");
+
+    counter++;
+}
 
 /* ********************** TEST Functions SEnd  ***************************************************** */
 
