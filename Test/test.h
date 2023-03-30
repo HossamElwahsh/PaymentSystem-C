@@ -2,11 +2,11 @@
 #define PAYMENTSYSTEM_TEST_H
 
 #include <stdlib.h>
-#include "../Card/card.h"
-#include "../Terminal/terminal.h"
-#include "../Server/server.h"
+#include "card.h"
+#include "terminal.h"
+#include "server.h"
 
-#define TEST_DIR "../Test/TestCases/"
+#define TEST_DIR "../TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
 
 /**
@@ -16,13 +16,13 @@
  * @param test_dir [in] main test dir
  * @param testFilename [out] full filename for the file requested
  */
-//void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType);
+ //void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType);
 
 
 
-/******************** CARD MODULE ********************/
+ /******************** CARD MODULE ********************/
 
-/** Test function for @see ../Card/card.c:getCardPan() */
+ /** Test function for @see ../Card/card.c:getCardPan() */
 void getCardPANTest(void);
 
 /******************** TERMINAL MODULE ********************/
@@ -30,5 +30,6 @@ void getTransactionDateTest(void);
 void getTransactionAmountTest(void);
 void setMaxAmountTest(void);
 void isValidCardPANTest(void);
+void isBlockedAccountTest(void);
 
 #endif //PAYMENTSYSTEM_TEST_H

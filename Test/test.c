@@ -22,99 +22,28 @@ void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileTy
 /***
  * Runs test cases for getCardPan
  */
-void getCardPANTest(void) {
-    // test cases init
-    char *test_cases_filename = CONCAT(TEST_DIR, "getCardPan.csv");
-    const char testCaseDelimiter[2] = ",";
-
-    // test case data
-    char testCase[256];
-
-    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
-
-    // Print Test Header
-    printf("===============================\n");
-    printf("Tester Name:\tHossam Elwahsh\n");
-    printf("Function Name:\tgetCardPan\n");
-    printf("===============================\n");
-
-    // running test cases
-//    for (int i = 0; i < testCasesCount; ++i) {
-
-    FILE *fp_test_cases;
-    int i = 0;
 
 
-    // redirect test case inputData to stdin
-    fp_test_cases = fopen(test_cases_filename, "r");
-
-    // read test case inputData
-//        fgets(testCase, sizeof(testCase), fp_test_cases);
-    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
-        // split test case into tokens of input data & expected result (which was delimited by comma)
-
-        FILE *fp_fake_stdin;
-        char *inputData;
-        char *expectedResult;
-
-        printf("\n-----------------------\n");
-        printf("Test Case %d\n", i + 1);
-        printf("-----------------------\n");
-
-        inputData = strtok(testCase, testCaseDelimiter);
-        expectedResult = strtok(NULL, testCaseDelimiter);
-
-        printf("Input Data: %s\n", inputData);
-        printf("Expected: %s\n", expectedResult);
-
-        /************* push input data to stdin ***************/
-        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
-        fprintf(fp_fake_stdin, "%s\n", inputData);
-        rewind(fp_fake_stdin);
-
-        /************* Execute test case ***************/
-        EN_cardError_t ret = getCardPAN(cardData);
-        // turn on console logs
-
-        printf("Actual Result: ");
-        switch (ret) {
-            case CARD_OK:
-                printf("CARD OK\n");
-                break;
-            case WRONG_PAN:
-                printf("WRONG_PAN\n");
-                break;
-        }
-
-        fclose(fp_fake_stdin);
-        i++; // next test case
-    }
-
-    free(cardData);
-    fclose(fp_test_cases);
-}
-
-
-/** *******************************************************
-    ******************* TERMINAL MODULE *******************
-    *******************************************************/
+ /** *******************************************************
+     ******************* TERMINAL MODULE *******************
+     *******************************************************/
 
 void getTransactionAmountTest(void)
 {
     ST_terminalData_t MyTerminalData;
 
-    uint8_t i, WrongName=0, WrongString[] = "INVALID_AMOUNT, Please check your transaction amount!\n";
+    uint8_t i, WrongName = 0, WrongString[] = "INVALID_AMOUNT, Please check your transaction amount!\n";
     printf("Tester Name: Mahmoud_Mowafey\n");
     printf("Function Name: getTransactionAmount\n\n\n");
-    for ( i=0 ; i<5 ; i++ )
+    for (i = 0; i < 5; i++)
     {
         WrongName = getTransactionAmount(&MyTerminalData);
-        printf("\nTest Case_%d: \n",i);
-        printf("Input Data: %f\n",MyTerminalData.maxTransAmount);
+        printf("\nTest Case_%d: \n", i);
+        printf("Input Data: %f\n", MyTerminalData.maxTransAmount);
         printf("Expected Result: Your transaction amount should be greater than Zero\n");
-        if( WrongName == INVALID_AMOUNT )
+        if (WrongName == INVALID_AMOUNT)
         {
-            printf("Actual Result: %s\n",WrongString);
+            printf("Actual Result: %s\n", WrongString);
         }
         else
             printf("Actual Result: Your operation is done\n");
@@ -138,7 +67,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -154,7 +83,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -170,7 +99,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -186,7 +115,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -202,7 +131,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -218,7 +147,7 @@ void getTransactionDateTest_old(void)
     termError = getTransactionDate(&termData);
     printf("Actual Result   : ");
 
-    if(termError == WRONG_DATE)
+    if (termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
     }
@@ -233,13 +162,13 @@ void getTransactionDateTest_old(void)
  */
 void getTransactionDateTest(void) {
     // test cases init
-    char *test_cases_filename = CONCAT(TEST_DIR, "getTransactionDate.csv");
+    char* test_cases_filename = CONCAT(TEST_DIR, "getTransactionDate.csv");
     const char testCaseDelimiter[2] = ",";
 
     // test case data
     char testCase[256];
 
-    ST_terminalData_t *terminalData = calloc(1, sizeof(ST_terminalData_t));
+    ST_terminalData_t* terminalData = calloc(1, sizeof(ST_terminalData_t));
 
     // Print Test Header
     printf("===============================\n");
@@ -250,7 +179,7 @@ void getTransactionDateTest(void) {
     // running test cases
 //    for (int i = 0; i < testCasesCount; ++i) {
 
-    FILE *fp_test_cases;
+    FILE* fp_test_cases;
     int i = 0;
 
 
@@ -262,9 +191,9 @@ void getTransactionDateTest(void) {
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
-        FILE *fp_fake_stdin;
-        char *inputData;
-        char *expectedResult;
+        FILE* fp_fake_stdin;
+        char* inputData;
+        char* expectedResult;
 
         printf("\n-----------------------\n");
         printf("Test Case %d\n", i + 1);
@@ -287,12 +216,12 @@ void getTransactionDateTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-            case WRONG_DATE:
-                printf("WRONG_DATE OK\n");
-                break;
-            case TERMINAL_OK:
-                printf("TERMINAL_OK\n");
-                break;
+        case WRONG_DATE:
+            printf("WRONG_DATE OK\n");
+            break;
+        case TERMINAL_OK:
+            printf("TERMINAL_OK\n");
+            break;
         }
 
         fclose(fp_fake_stdin);
@@ -308,12 +237,12 @@ void getTransactionDateTest(void) {
  */
 void setMaxAmountTest(void) {
     // test cases init
-    char *test_cases_filename = CONCAT(TEST_DIR, "setMaxAmount.csv");
+    char* test_cases_filename = CONCAT(TEST_DIR, "setMaxAmount.csv");
     const char testCaseDelimiter[2] = ",";
 
     // test case data
     char testCase[256];
-    ST_terminalData_t *terminalData = calloc(1, sizeof(ST_terminalData_t));
+    ST_terminalData_t* terminalData = calloc(1, sizeof(ST_terminalData_t));
 
     // Print Test Header
     printf("===============================\n");
@@ -324,7 +253,7 @@ void setMaxAmountTest(void) {
     // running test cases
 //    for (int i = 0; i < testCasesCount; ++i) {
 
-    FILE *fp_test_cases;
+    FILE* fp_test_cases;
     int i = 0;
 
 
@@ -336,8 +265,8 @@ void setMaxAmountTest(void) {
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
-        char *inputData;
-        char *expectedResult;
+        char* inputData;
+        char* expectedResult;
 
         printf("\n-----------------------\n");
         printf("Test Case %d\n", i + 1);
@@ -355,12 +284,12 @@ void setMaxAmountTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-            case TERMINAL_OK:
-                printf("TERMINAL_OK\n");
-                break;
-            case INVALID_MAX_AMOUNT:
-                printf("INVALID_MAX_AMOUNT\n");
-                break;
+        case TERMINAL_OK:
+            printf("TERMINAL_OK\n");
+            break;
+        case INVALID_MAX_AMOUNT:
+            printf("INVALID_MAX_AMOUNT\n");
+            break;
         }
 
         i++; // next test case
@@ -377,11 +306,11 @@ void setMaxAmountTest(void) {
 
 void isValidCardPANTest(void) {
     // test cases init
-    char *test_cases_filename = CONCAT(TEST_DIR, "isValidCardPAN.csv");
+    char* test_cases_filename = CONCAT(TEST_DIR, "isValidCardPAN.csv");
     const char testCaseDelimiter[2] = ",";
 
     // test case data
-    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
+    ST_cardData_t* cardData = calloc(1, sizeof(ST_cardData_t));
     char testCase[256];
 
     // Print Test Header
@@ -393,7 +322,7 @@ void isValidCardPANTest(void) {
     // running test cases
 //    for (int i = 0; i < testCasesCount; ++i) {
 
-    FILE *fp_test_cases;
+    FILE* fp_test_cases;
     int i = 0;
 
     // redirect test case inputData to stdin
@@ -404,8 +333,8 @@ void isValidCardPANTest(void) {
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
-        char *inputData;
-        char *expectedResult;
+        char* inputData;
+        char* expectedResult;
 
         printf("\n-----------------------\n");
         printf("Test Case %d\n", i + 1);
@@ -418,7 +347,7 @@ void isValidCardPANTest(void) {
         printf("Expected: %s\n", expectedResult);
 
         // clear data
-        for (int j = 0; j < sizeof (cardData->primaryAccountNumber); ++j) {
+        for (int j = 0; j < sizeof(cardData->primaryAccountNumber); ++j) {
             cardData->primaryAccountNumber[j] = 0;
         }
 
@@ -432,12 +361,12 @@ void isValidCardPANTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-            case TERMINAL_OK:
-                printf("TERMINAL_OK\n");
-                break;
-            case INVALID_CARD:
-                printf("INVALID_CARD\n");
-                break;
+        case TERMINAL_OK:
+            printf("TERMINAL_OK\n");
+            break;
+        case INVALID_CARD:
+            printf("INVALID_CARD\n");
+            break;
         }
 
         i++; // next test case
@@ -448,6 +377,87 @@ void isValidCardPANTest(void) {
 }
 
 
+/** *******************************************************
+    ******************* SERVER MODULE *******************
+    *******************************************************/
+
+    /**
+     * Runs test cases for isBlockedAccount()
+     */
+void isBlockedAccountTest(void)
+{
+    // test cases init
+    char* test_cases_filename = CONCAT(TEST_DIR, "isBlockedAccount.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    char testCase[256];
+
+    ST_accountsDB_t* accountState = calloc(1, sizeof(ST_accountsDB_t));
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tMahmoud Mowafey\n");
+    printf("Function Name:\tisBlokedAccount\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE* fp_test_cases;
+    int i = 0;
+
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        FILE* fp_fake_stdin;
+        char* inputData;
+        char* expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data: %s\n", inputData);
+        printf("Expected: %s\n", expectedResult);
+
+        /************* push input data to stdin ***************/
+        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+        fprintf(fp_fake_stdin, "%s\n", inputData);
+        rewind(fp_fake_stdin);
+
+        /************* Execute test case ***************/
+        EN_serverError_t ret = isBlockedAccount(accountState);
+        // turn on console logs
+
+        printf("Actual Result: ");
+        switch (ret) {
+        case SERVER_OK:
+            printf("Account is unblocked\n");
+            break;
+        case BLOCKED_ACCOUNT:
+            printf("Account is blocked\n");
+            break;
+        }
+
+        fclose(fp_fake_stdin);
+        i++; // next test case
+    }
+
+    free(accountState);
+    fclose(fp_test_cases);
+
+}
+
 /**
  * Call this from main.c to test all project modules
  */
@@ -455,8 +465,8 @@ void testAll()
 {
     /** CARD MODULE */
     // todo print card module testing
-    getCardPANTest();
-
+   // getCardPANTest();
+    isBlockedAccountTest();
     /** TERMINAL MODULE */
 //     todo print terminal module testing
 //    getTransactionDateTest();
