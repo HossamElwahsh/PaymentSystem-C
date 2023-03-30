@@ -20,14 +20,9 @@
  * Function : getTransactionAmount()
  *//**
  * Description:
- *
+ * @Author     	: Mahmoud Mowafey
  * This function is used to test the getTransactionAmount(ST_terminalData_t *termData) function, to validate the terminal data.
  *
- * PRE-CONDITION:
- * PRE-CONDITION:
- * PRE-CONDITION:
- * PRE-CONDITION:
- * POST-CONDITION:
  *
  * @param [in]		termData is a pointer to the ST_terminalData_t structure that holding data
  * 					about the terminal such as transAmount, maxTransAmount, transactionGate.
@@ -51,8 +46,8 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 	printf("\nEnter the amount for transaction: \t");
 	fflush(stdin);
 	fflush(stdout);
-	scanf("%f",&(termData->maxTransAmount));
-	if( ( termData->maxTransAmount ) <= 0.0  )
+	scanf("%f",&(termData->transAmount));
+    if ( (termData->transAmount) <= 0.0 ) 
 		return INVALID_AMOUNT;
 	else
 		return TERMINAL_OK;
