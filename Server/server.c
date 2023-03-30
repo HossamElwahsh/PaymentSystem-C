@@ -1,19 +1,24 @@
 #include "server.h"
 
+ST_accountsDB_t accountsDB[255] = {
+        {2000.5f, RUNNING,"465802789866246"},
+        {10000.0f, BLOCKED, "4523811971470463"},
+        { 3000.5f, RUNNING,"3566250034860958"},
+        {2000.5f, RUNNING,"5246473315044497"},
+        {10000.7f, BLOCKED, "5224747772286501"},
+        { 2000.5f, RUNNING,"5295132073042677"},
+        {2000.5f, RUNNING,"5296594764212407"},
+        {10000.0f, BLOCKED, "5235394910255721"},
+        { 2000.5f, RUNNING,"5220871865596701"},
+        {2000.5f, RUNNING,"5296594764212407"}
+};
 
 
-
-
-
-
-
-
-
-
+ST_transaction_t transactionsDB[255];
 
 /***********************************************************************************************************************/
 
- /*
+ /**
  * @author         : Tarek Gohry
  * @brief          : Take all transaction data and validate its data 
  * Description     :
@@ -25,29 +30,35 @@
 	- INTERNAL_SERVER_ERROR if a transaction can't be saved
 	- APPROVED Otherwise
  */
- 
  EN_transState_t recieveTransactionData(ST_transaction_t *transData)
  {
-	if(isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accountRefrence) == ACCOUNT_NOT_FOUND)
+     ST_accountsDB_t * accountReference = calloc(1, sizeof(ST_accountsDB_t));
+
+    if(isValidAccount(&transData->cardHolderData, accountReference) == ACCOUNT_NOT_FOUND)
 	{
+        free(accountReference);
 		return FRAUD_CARD; 
 	}
-	
-	if(isAmountAvailable(ST_terminalData_t *termData, ST_accountsDB_t *accountRefrence) == LOW_BALANCE)
+
+	if(isBlockedAccount(accountReference) == BLOCKED_ACCOUNT)
 	{
-		return DECLINED_INSUFFECIENT_FUND;
-	}
-	
-	if(isBlockedAccount(ST_accountsDB_t *accountRefrence) == BLOCKED_ACCOUNT)
-	{
+        free(accountReference);
 		return DECLINED_STOLEN_CARD;
 	}
+
+     if(isAmountAvailable(&transData->terminalData, accountReference) == LOW_BALANCE)
+     {
+         free(accountReference);
+         return DECLINED_INSUFFECIENT_FUND;
+     }
 	
-	if(saveTransaction(ST_transaction_t *transData) != SERVER_OK)
+	if(saveTransaction(transData) != SERVER_OK)
 	{
+        free(accountReference);
 		return INTERNAL_SERVER_ERROR;
 	}
-	
+
+    free(accountReference);
 	return APPROVED; 
  }
  
