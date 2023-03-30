@@ -87,9 +87,151 @@ void getCardPANTest(void)
         fclose(fp_input_data);
     }
 }
+/*********************************************************
+ * ******************* TERMINAL MODULE *******************
+ * ********************************************************/
 
-/*
-int main()
+void getTransactionAmountTest(void)
 {
-    getCardPANTest();
-}*/
+    ST_terminalData_t MyTerminalData;
+
+    uint8_t i, WrongName=0, WrongString[] = "INVALID_AMOUNT, Please check your transaction amount!\n";
+    printf("Tester Name: Mahmoud_Mowafey\n");
+    printf("Function Name: getTransactionAmount\n\n\n");
+    for ( i=0 ; i<5 ; i++ )
+    {
+        WrongName = getTransactionAmount(&MyTerminalData);
+        printf("\nTest Case_%d: \n",i);
+        printf("Input Data: %f\n",MyTerminalData.maxTransAmount);
+        printf("Expected Result: Your transaction amount should be greater than Zero\n");
+        if( WrongName == INVALID_AMOUNT )
+        {
+            printf("Actual Result: %s\n",WrongString);
+        }
+        else
+            printf("Actual Result: Your operation is done\n");
+    }
+
+}
+
+
+void getTransactionDateTest(void)
+{
+    ST_terminalData_t termData;
+    EN_terminalError_t termError;
+
+    printf("\n");
+    printf("Tester name     : Tarek Gohry\n");
+    printf("Function name   : getTransactionDate\n");
+
+    /* Test Date Format Length */
+    printf("\nTest Case 1:\n");
+    printf("Input Data      : 01/02\n");
+    printf("Expected Result : WRONG_DATE\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+
+    /* Test Year Format */
+    printf("\nTest Case 2:\n");
+    printf("Input Data      : 01/12/2022222\n");
+    printf("Expected Result : WRONG_DATE\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+
+    /* Test Day Format */
+    printf("\nTest Case 3:\n");
+    printf("Input Data      : 33/02/2022\n");
+    printf("Expected Result : WRONG_DATE\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+
+    /* Test Month Format */
+    printf("\nTest Case 4:\n");
+    printf("Input Data      : 02/15/2022\n");
+    printf("Expected Result : WRONG_DATE\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+
+    /* Test Year Format */
+    printf("\nTest Case 5:\n");
+    printf("Input Data      : 02/12/20az\n");
+    printf("Expected Result : WRONG_DATE\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+
+    /* Test Correct Date Format*/
+    printf("\nTest Case 6:\n");
+    printf("Input Data      : 01/02/2022\n");
+    printf("Expected Result : TERMINAL_OK\n");
+    termError = getTransactionDate(&termData);
+    printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        printf("TERMINAL_OK\n");
+    }
+}
+
+/**
+ * Call this from main.c to test all project modules
+ */
+void testAll()
+{
+    /** CARD MODULE */
+    // todo print card module testing
+//    getCardPANTest();
+
+    /** TERMINAL MODULE */
+//     todo print terminal module testing
+//    getTransactionDateTest();
+//    getTransactionAmountTest();
+}

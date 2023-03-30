@@ -3,6 +3,9 @@
 
 #include <stdlib.h>
 #include "card.h"
+#include "terminal.h"
+#include "server.h"
+
 #define TEST_DIR "../Test/TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
 
@@ -15,9 +18,15 @@
  */
 void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType);
 
-/**
- * Test function for @see ../Card/card.c:getCardPan()
- * */
+
+
+/******************** CARD MODULE ********************/
+
+/** Test function for @see ../Card/card.c:getCardPan() */
 void getCardPANTest(void);
+
+/******************** TERMINAL MODULE ********************/
+void getTransactionDateTest();
+void getTransactionAmountTest(void);
 
 #endif //PAYMENTSYSTEM_TEST_H
