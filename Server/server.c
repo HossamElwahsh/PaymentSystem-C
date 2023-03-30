@@ -64,6 +64,7 @@ ST_transaction_t transactionsDB[255];
  
  /***********************************************************************************************************************/
 
+
 /***********************************************************************************************************************/
 
 /**
@@ -82,8 +83,17 @@ ST_transaction_t transactionsDB[255];
 
 EN_serverError_t saveTransaction(ST_transaction_t *transData)
 {
-    
+
+    transactionsDB[transData->transactionSequenceNumber].cardHolderData = transData->cardHolderData;
+    transactionsDB[transData->transactionSequenceNumber].terminalData = transData->terminalData;
+    transactionsDB[transData->transactionSequenceNumber].transState = transData->transState;
+    transactionsDB[transData->transactionSequenceNumber].transactionSequenceNumber = transData->transactionSequenceNumber++;
+
+    listSavedTransactions();
+
+    return SERVER_OK;
 }
+
 
 
 /***********************************************************************************************************************/
