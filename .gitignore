@@ -63,3 +63,5 @@ dkms.conf
 cmake-build-debug
 
 test-*
+
+Test/TestCases/temp_stdin.txt

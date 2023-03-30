@@ -13,7 +13,7 @@
  *
  */
 
-#include"card.h"
+#include "card.h"
 
 
 ST_cardData_t MyCard;
@@ -121,7 +121,7 @@ EN_cardError_t getCardPAN(ST_cardData_t *cardData){
     // Format Check
     // less than 16 or more than 19
 //    printf("Card length: %llu\n", strlen(panStr));
-    printf("Card number: %s\n", panStr);
+//    printf("Card number: %s\n", panStr);
     if(strlen(panStr) < 16 || strlen(panStr) > 19)
     {
 //        printf("WRONG_PAN length\n");
