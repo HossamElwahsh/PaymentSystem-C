@@ -106,9 +106,6 @@ EN_cardError_t getCardPAN(ST_cardData_t *cardData){
     // temp variable for user input
     char panStr[25] = {'\0'};
 
-    // PAN integer array
-    uint8_t primaryAccountNumber[20] = {0};
-
     // prompt user to enter PAN
     printf("Enter card's primary account number (PAN):\n");
     fgets(panStr, sizeof(panStr), stdin);
@@ -131,8 +128,13 @@ EN_cardError_t getCardPAN(ST_cardData_t *cardData){
     // loop over all characters
     for (int i = 0; i < strlen(panStr); i++) {
 
-        // convert string digits to integers and save in `primaryAccountNumber` array
-        primaryAccountNumber[i] = (uint8_t)(panStr[i] - '0');
+        // clear data if any
+        for (int j = 0; j < sizeof (cardData->primaryAccountNumber); ++j) {
+            cardData->primaryAccountNumber[j] = 0;
+        }
+
+        // store PAN in `cardData`
+        cardData->primaryAccountNumber[i] = (uint8_t)(panStr[i]);
 
         // check if any character isn't a digit
         if(!isdigit(panStr[i]))
