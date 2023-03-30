@@ -1,7 +1,7 @@
-/*
+/**
  * @Title      	: Card Module
  * @Filename   	: card.c
- * @Author     	: Mahmoud Mowafey
+ * @Authors     : Mahmoud Mowafey, Hossam Elwahsh
  * @Origin Date	: Mar 28, 2023
  * @Version		: 1.0.0
  * @Compiler	: MinGW
@@ -90,6 +90,70 @@ EN_cardError_t getCardHolderName(ST_cardData_t *cardData)
 		return CARD_OK;
 	}
 }
+
+/**
+ * @author Hossam Elwahsh
+ * Description:
+ *  This function will ask for the card's Primary Account Number (PAN) and store it in card data
+ *  PAN is 20 numeric characters string, 19 chars max. and 16 chars min.
+ *
+ * @param cardData [out] card data
+ * @return WRONG_PAN if PAN is less than 16 or more than 19
+ * @return CARD_OK otherwise
+ */
+EN_cardError_t getCardPAN(ST_cardData_t *cardData){
+
+    // temp variable for user input
+    char panStr[25] = {'\0'};
+
+    // PAN integer array
+    uint8_t primaryAccountNumber[20] = {0};
+
+    // prompt user to enter PAN
+    printf("Enter card's primary account number (PAN):\n");
+    fgets(panStr, sizeof(panStr), stdin);
+
+    // remove trailing newline from string
+    char* ptr = strchr(panStr, '\n');
+    if (ptr) *ptr = '\0';
+    //    panStr[strlen(panStr)] = '\0';
+
+    // Format Check
+    // less than 16 or more than 19
+//    printf("Card length: %llu\n", strlen(panStr));
+//    printf("Card number: %s\n", panStr);
+    if(strlen(panStr) < 16 || strlen(panStr) > 19)
+    {
+//        printf("WRONG_PAN length\n");
+        return WRONG_PAN;
+    }
+
+    // loop over all characters
+    for (int i = 0; i < strlen(panStr); i++) {
+
+        // convert string digits to integers and save in `primaryAccountNumber` array
+        primaryAccountNumber[i] = (uint8_t)(panStr[i] - '0');
+
+        // check if any character isn't a digit
+        if(!isdigit(panStr[i]))
+        {
+            return WRONG_PAN;
+        }
+    }
+
+    return CARD_OK;
+}
+
+
+#include <stdlib.h>
+int main2()
+{
+    ST_cardData_t * cardData = calloc(1, sizeof (ST_cardData_t));
+    getCardPAN(cardData);
+
+    return 0;
+}
+
 
 /************************************************************************************************************
  * Function : getCardHolderNameTest()
