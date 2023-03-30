@@ -37,3 +37,30 @@ PaymentSystem:.
         terminal.c
         terminal.h
 ```
+
+## More info
+
+### Credit card numbers
+This is often referred to as the ‘long number’ on the front of your credit card, which is usually 16 digits, 
+but can be up to 19 digits in some instances. More formally, it’s known as a Permanent Account Number, or ‘PAN’.
+
+It’s not just a random number though. Your credit card number is unique to you and includes information
+used to identify your account, card and who it’s issued by.
+
+The first digit indicates the provider:
+
+- Mastercard numbers start with a `2` or `5`
+- Visa card numbers start with a `4`
+- American Express numbers start with a `3`
+
+The first 6 digits help to identify the card issuer, known as an Issue Identifier Number or ‘IIN’.
+
+All numbers following that relate specifically to your account,
+excluding the last one which is known as a ‘check digit’. 
+This helps us verify that the full credit card number has been provided, and in the right order, 
+anytime you make a purchase or payment.
+
+This method for creating credit card numbers is used internationally, 
+and was invented by IBM engineer **Hans Peter Luhn** in 1954.
+
+---
