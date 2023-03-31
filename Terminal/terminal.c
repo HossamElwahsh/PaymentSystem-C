@@ -139,18 +139,40 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
  * @return INVALID_MAX_AMOUNT if max amount is less than or equal zero
  * @return TERMINAL_OK otherwise
  */
-EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
-{
-    if(maxAmount > 0) {
+EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount) {
+    if (maxAmount > 0) {
         termData->maxTransAmount = maxAmount;
         return TERMINAL_OK;
-    }
-    else
-    {
+    } else {
         return INVALID_MAX_AMOUNT;
     }
 
 }
+
+
+ /*****************************************************************************************/
+ /*    Function Description    : This function compares the transaction amount with the terminal max allowed amount. */
+ /*    Parameter in            : ST_terminalData_t* termData */
+ /*    Parameter inout         : None */
+ /*    Parameter out           : None */
+ /*    Return value            : return EXCEED_MAX_AMOUNT If the transaction amount is larger than the terminal max allowed amount
+ *                               return TERMINAL_OK otherwise;
+ *    Requirment              : None */
+ /*****************************************************************************************/
+ EN_terminalError_t isBelowMaxAmount(ST_terminalData_t* termData)
+ {
+     if (termData->transAmount > termData->maxTransAmount)
+         return EXCEED_MAX_AMOUNT;
+     return TERMINAL_OK;
+ }
+
+
+/* ********************** Main Terminal Functions End ********************************************** */
+
+
+/* ********************** TEST Functions Start ***************************************************** */
+//void getTransactionAmountTest(void) todo
+
 
 /**
  * This function will check if the PAN is a Luhn number or not
@@ -159,11 +181,9 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
  * @return TERMINAL_OK otherwise
  */
 EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData){
-
     int sum = 0;
     int len = sizeof(cardData->primaryAccountNumber);
     int is_second = 0;
-
     for (int i = len - 1; i >= 0; i--) {
         int digit = cardData->primaryAccountNumber[i];
         if(digit == 0) continue; // card number is less than 20
@@ -191,4 +211,41 @@ EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData){
     return ((sum % 10 == 0) ? TERMINAL_OK : INVALID_CARD);
 
 }
+
+ /*****************************************************************************************/
+ /*    Function Description    : test all possible scenarios, happy-case, and worst-case scenarios. on isBelowMaxAmount function*/
+ /*    Parameter in            : None */
+ /*    Parameter inout         : None */
+ /*    Parameter out           : None */
+ /*    Return value            : None */
+ /*    Requirment              : None */
+ /*
+ * Test casese 1000 , 1500 , 2000 , 2500 ,3000 , 3500 , 4000 , 4500 , 5000 , 5500 , 6000 , 6500 , 7000 , 7500 , 8000 , 8500 , 9000
+ *             9500 , 10000 , 10500 
+ * max_amount set to 8000 
+ */
+ /*****************************************************************************************/
+void isBelowMaxAmountTest(void)
+{
+    static char counter;
+    ST_terminalData_t termData[20];
+    EN_terminalError_t error = TERMINAL_OK;
+    termData[counter].maxTransAmount = 8000.0;
+    termData[counter].transAmount = 1000.0 + (500.0 * counter);
+    error = isBelowMaxAmount(&termData[counter]);
+    printf("Tester Name: Matarawy\n");
+    printf("Test case : %d\n", counter + 1);
+    printf("Input Data: maxTransAmount = 8000 and transAmount = %2.f\n", termData[counter].transAmount);
+    if (error == EXCEED_MAX_AMOUNT)
+        printf("Expected Result: Your amount is more than the max amount\n");
+    else
+        printf("Expected Result: Your amount is OK\n");
+    if (error == TERMINAL_OK)
+        printf("Actual Result: Your amount is OK\n\n\n\n");
+    else
+        printf("Actual Result:  amount is more than the max amount \n\n\n\n");
+
+    counter++;
+}
+
 /* ********************** Main Terminal Functions End ********************************************** */

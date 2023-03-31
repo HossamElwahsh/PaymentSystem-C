@@ -19,6 +19,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -60,6 +61,10 @@ typedef enum EN_cardError_t
 /**************************************************************************************************************************************/
 
 void getCardHolderNameTest(void);
+void getCardExpiryDateTest(void);
+
+
+#define EXPIRY_DATE_MAX_SIZE	5
 
 #endif /* CARD_H_ */
 
