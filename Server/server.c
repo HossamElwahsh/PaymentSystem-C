@@ -34,9 +34,12 @@ static uint8_t Glb_TransactionsDBIndex = 0;
 
 
 /* ********************** Main Terminal Functions Start ******************************************** */
+
+
 /*
  Name: isValidAccount
  Input: Pointer to Card Data structure, 
+ Input: Pointer to Card Data structure, Pointer to AccountsDB structure
  Output: EN_sreverError_t Error or No Error
  Description: 1. This function will take card data and validate if the account related to this card exists or not.
               2. It checks if the PAN exists or not in the server's database (searches for the card PAN in the DB).
@@ -77,13 +80,59 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accoun
     return Loc_ErrorState;
 }
 
+/*
+ Name: listSavedTransactions
+ Input: void
+ Output: void
+ Description: 
+*/
+void listSavedTransactions(void)
+{
+    for(uint8_t Loc_u8Index = 0; Loc_Index <= Glb_TransactionsDBIndex; Loc_Index++)
+    {
+        printf("\n");
+
+        printf(" ##########################\n");
+        printf(" Transaction Sequence Number: %d\n", transactionsDB[Loc_u8Index].transactionSequenceNumber);
+        printf(" Transaction Date: %s\n", transactionsDB[Loc_u8Index].terminalData.transactionDate);
+        printf(" Transaction Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.transAmount);
+        printf(" Transaction State: %c\n", transactionsDB[Loc_u8Index].transState);
+        printf(" Terminal Max Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.maxTransAmount);
+        printf(" Cardholder Name: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardHolderName);
+        printf(" PAN: %s\n", transactionsDB[Loc_u8Index].cardHolderData.primaryAccountNumber);
+        printf(" Card Expiration Date: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardExpirationDate);
+        printf(" ##########################\n");
+
+        printf("\n");
+    }
+}
+
 /* ********************** Main Terminal Functions End ********************************************** */
 
 /* ********************** TEST Functions Start ***************************************************** */
 
 void isValidAccountTest(void)
 {
+    printf("\n");
+	printf("Tester name     : Abdelrhman Walaa\n");
+	printf("Function name   : isValidAccount\n\n");
 
+	printf("Test Case 1:\n");
+	printf("Input Data      : \n");
+	printf("Expected Result : ACCOUNT_NOT_FOUND\n");
+	printf("Actual Result   : ");
+}
+
+void listSavedTransactionsTest(void)
+{
+    printf("\n");
+	printf("Tester name     : Abdelrhman Walaa\n");
+	printf("Function name   : listSavedTransactions\n\n");
+
+	printf("Test Case 1:\n");
+	printf("Input Data      : \n");
+	printf("Expected Result : ACCOUNT_NOT_FOUND\n");
+	printf("Actual Result   : ");
 }
 
 /* ********************** TEST Functions End  ***************************************************** */
