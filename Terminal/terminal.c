@@ -242,35 +242,6 @@ EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData)
 /* ********************** Main Terminal Functions End ********************************************** */
 
 
-/* ********************** TEST Functions Start ***************************************************** */
-
- void getTransactionDateTest(void)
- {
-    ST_terminalData_t termData;
-    EN_terminalError_t termError;
-
-    termError = getTransactionDate(&termData);
-
-	printf("\n");
-	printf("Tester name     : Tarek Gohry\n");
-	printf("Function name   : getTransactionDate\n\n");
-
-	printf("Test Case 1:\n");
-	printf("Input Data      : 01/02/zzzz\n");
-	printf("Expected Result : WRONG_DATE\n");
-	printf("Actual Result   : ");
-
-    if(termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
- }
-
-
  /*****************************************************************************************/
  /*    Function Description    : This function compares the transaction amount with the terminal max allowed amount. */
  /*    Parameter in            : ST_terminalData_t* termData */
