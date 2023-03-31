@@ -1,8 +1,8 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "../Card/card.h"
-#include "../Terminal/terminal.h"
+#include "card.h"
+#include "terminal.h"
 #include <stdlib.h>
 
 typedef enum EN_transStat_t
@@ -36,15 +36,18 @@ typedef struct ST_accountsDB_t
     uint8_t primaryAccountNumber[20];
 }ST_accountsDB_t;
 
+typedef enum EN_flagState_t
+{
+	FLAG_DOWN, FLAG_UP
+}EN_flagState_t;
 
-EN_transState_t recieveTransactionData(ST_transaction_t *transData);
-EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accountRefrence);
-EN_serverError_t isBlockedAccount(ST_accountsDB_t *accountRefrence);
-EN_serverError_t isAmountAvailable(ST_terminalData_t *termData, ST_accountsDB_t *accountRefrence);
-EN_serverError_t saveTransaction(ST_transaction_t *transData);
+/* Functions' Prototypes */
+EN_transState_t recieveTransactionData(ST_transaction_t* transData);
+EN_serverError_t isValidAccount(ST_cardData_t* cardData, ST_accountsDB_t* accountRefrence);
+EN_serverError_t isBlockedAccount(ST_accountsDB_t* accountRefrence);
+EN_serverError_t isAmountAvailable(ST_terminalData_t* termData, ST_accountsDB_t* accountRefrence);
+EN_serverError_t saveTransaction(ST_transaction_t* transData);
+//EN_serverError_t getTransaction(uint32_t transactionSequenceNumber, ST_transaction_t* transData);
 void listSavedTransactions(void);
 
-
-/*test functions*/
-void isBlockedAccountTest(void);
-#endif
+#endif /* SERVER_H_ */

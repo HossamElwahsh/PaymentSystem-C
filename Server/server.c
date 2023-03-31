@@ -14,21 +14,32 @@
  */
 #include "server.h"
 
-ST_accountsDB_t accountsDB[255] = {
-        {2000.5f, RUNNING,"465802789866246"},
-        {10000.0f, BLOCKED, "4523811971470463"},
-        { 3000.5f, RUNNING,"3566250034860958"},
-        {2000.5f, RUNNING,"5246473315044497"},
-        {10000.7f, BLOCKED, "5224747772286501"},
-        { 2000.5f, RUNNING,"5295132073042677"},
-        {2000.5f, RUNNING,"5296594764212407"},
-        {10000.0f, BLOCKED, "5235394910255721"},
-        { 2000.5f, RUNNING,"5220871865596701"},
-        {2000.5f, RUNNING,"5296594764212407"}
-};
+/* Standard Library */
+#include <string.h>
+#include "card.h"
+#include "server.h"
+#include "terminal.h"
 
+/* Accounts Database */
+ST_accountsDB_t  accountsDB[255] =               /* Visa */                               /* MasterCard */
+        /* Balance |  State |        PAN       */  /* Balance |  State |        PAN       */
+        {{  12000.0f   , BLOCKED, "4728459258966333"}, {  68600.3f , RUNNING, "5183150660610263"},
+         {  5805.5f  , RUNNING, "4946084897338284"}, {  5000.3f  , RUNNING, "5400829062340903"},
+         {  90360.12f, RUNNING, "4728451059691228"}, {  1800000.0f , RUNNING, "5191786640828580"},
+         {  16800.58f, RUNNING, "4573762093153876"}, {  40800.0f   , RUNNING, "5367052744350494"},
+         {  520.9f   , RUNNING, "4127856791257426"}, {  18900.45f, RUNNING, "5248692364161088"},
+         {  6900.33f , RUNNING, "4946099660091878"}, {  1047751.0f , RUNNING, "5419558003040483"},
+         {  200000.0f  , RUNNING, "4834699064563433"}, {  3026239.0f , RUNNING, "5116136307216426"},
+         {  5000000.0f , RUNNING, "4946069587908256"}, {  9362076.0f , RUNNING, "5335847432506029"},
+         {  25600.0f   , RUNNING, "4946085117749481"}, {  10662670.0f, RUNNING, "5424438206113309"},
+         {  895000.0f  , RUNNING, "4946099683908835"}, {  1824.0f    , RUNNING, "5264166325336492"}};
 
-ST_transaction_t transactionsDB[255];
+uint8_t Glb_AccountsDBIndex = 0;
+
+/* Transactions Database */
+ST_transaction_t transactionsDB[255] = {0};
+/* Transactions Database Index */
+static uint8_t Glb_TransactionsDBIndex = 0;
 
 /***********************************************************************************************************************/
 
@@ -75,46 +86,54 @@ ST_transaction_t transactionsDB[255];
     free(accountReference);
 	return APPROVED; 
  }
- 
- /***********************************************************************************************************************/
-
-
-/***********************************************************************************************************************/
 
 /**
-* @author         : Tarek Gohry
-* @brief          : Store all transaction data in the transaction database
-* Description     :
-   - It gives a sequence number to a transaction
-   - This number is incremented once a transaction is processed into the server
-   - Must check the last sequence number in the server to give the new transaction a new sequence number
-   - It saves ant type of a transaction. APPROVED, DECLINED_INSUFFECIENT_FUND, DECLINED_STOLEN_CARD,
-     FRUAD_CARD, INTERNAL_SERVER_ERROR
-   - List all saved transactions using the listSavedTransactions function
-* Return          :
-   - SERVER_OK, Assuming that the connection between the terminal and server is always connected
+Name: isValidAccount
+Input: Pointer to Card Data structure,
+Input: Pointer to Card Data structure, Pointer to AccountsDB structure
+Output: EN_sreverError_t Error or No Error
+Description: 1. This function will take card data and validate if the account related to this card exists or not.
+             2. It checks if the PAN exists or not in the server's database (searches for the card PAN in the DB).
+             3. If the PAN doesn't exist will return ACCOUNT_NOT_FOUND, else will return SERVER_OK and return a reference
+                to this account in the DB.
 */
-
-EN_serverError_t saveTransaction(ST_transaction_t *transData)
+EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accountRefrence)
 {
+    /* Define local variable to set the error state, No Error */
+    EN_serverError_t Loc_ErrorState = SERVER_OK;
+    /* Define local variable to set the flag state, Flag Down */
+    EN_flagState_t Loc_Flag = FLAG_DOWN;
 
-    transactionsDB[transData->transactionSequenceNumber].cardHolderData = transData->cardHolderData;
-    transactionsDB[transData->transactionSequenceNumber].terminalData = transData->terminalData;
-    transactionsDB[transData->transactionSequenceNumber].transState = transData->transState;
-    transactionsDB[transData->transactionSequenceNumber].transactionSequenceNumber = transData->transactionSequenceNumber++;
+    /* Loop: Until Account is found or until the end of accountsDB */
+    for (uint8_t Loc_Index = 0; Loc_Index < 255; Loc_Index++)
+    {
+        /* Check 1: Account is found */
+        if (!strcmp(cardData->primaryAccountNumber, accountsDB[Loc_Index].primaryAccountNumber))
+        {
+            /* Copy Account details from accountsDB to passed pointer */
+            *accountRefrence = accountsDB[Loc_Index];
+            /* Update accountsDB Index */
+            Glb_AccountsDBIndex = Loc_Index;
 
-    listSavedTransactions();
+            /* Update flag state, Account is Found! */
+            Loc_Flag = FLAG_UP;
+            break;
+        }
+    }
 
-    return SERVER_OK;
+    /* Check 2: Account is not found */
+    if (Loc_Flag == FLAG_DOWN)
+    {
+        /* Update error state, Account Not Found! */
+        Loc_ErrorState = ACCOUNT_NOT_FOUND;
+    }
+
+    return Loc_ErrorState;
 }
 
-
-
-/***********************************************************************************************************************/
-
- /************************************************************************************************************
-  * Function : isBlockedAccount()
-  *//**
+/************************************************************************************************************
+ * Function : isBlockedAccount()
+ *//**
   * Description:
   *
   * This function is used to check the user-account status, to validate if the account is blocked or running.
@@ -134,25 +153,21 @@ EN_serverError_t saveTransaction(ST_transaction_t *transData)
   *
   *
   ************************************************************************************************************/
-
 EN_serverError_t isBlockedAccount(ST_accountsDB_t* accountRefrence)
 {
-	if (accountRefrence->state)
-	{
-		return BLOCKED_ACCOUNT;
-	}
-	else
-	{
-		return SERVER_OK;
-	}
+    if (accountRefrence->state)
+    {
+        return BLOCKED_ACCOUNT;
+    }
+    else
+    {
+        return SERVER_OK;
+    }
 
 }
 
-/***************************************************************************************************************/
-
-
 /*****************************************************************************************/
-/*    Function Description    : This function will take terminal data and a reference to the account in the database 
+/*    Function Description    : This function will take terminal data and a reference to the account in the database
 *								and check if the account has a sufficient amount to withdraw or not.*/
 /*    Parameter in            : ST_terminalData_t* termData
 *								ST_accountsDB_t* accountRefrence	*/
@@ -164,46 +179,61 @@ EN_serverError_t isBlockedAccount(ST_accountsDB_t* accountRefrence)
 /*****************************************************************************************/
 EN_serverError_t isAmountAvailable(ST_terminalData_t* termData, ST_accountsDB_t* accountRefrence)
 {
-	if (termData->transAmount > accountRefrence->balance)
-		return LOW_BALANCE;
-	return SERVER_OK;
+    if (termData->transAmount > accountRefrence->balance)
+        return LOW_BALANCE;
+    return SERVER_OK;
+}
+
+/**
+* @author         : Tarek Gohry
+* @brief          : Store all transaction data in the transaction database
+* Description     :
+   - It gives a sequence number to a transaction
+   - This number is incremented once a transaction is processed into the server
+   - Must check the last sequence number in the server to give the new transaction a new sequence number
+   - It saves ant type of a transaction. APPROVED, DECLINED_INSUFFECIENT_FUND, DECLINED_STOLEN_CARD,
+     FRUAD_CARD, INTERNAL_SERVER_ERROR
+   - List all saved transactions using the listSavedTransactions function
+* Return          :
+   - SERVER_OK, Assuming that the connection between the terminal and server is always connected
+*/
+EN_serverError_t saveTransaction(ST_transaction_t *transData)
+{
+
+    transactionsDB[transData->transactionSequenceNumber].cardHolderData = transData->cardHolderData;
+    transactionsDB[transData->transactionSequenceNumber].terminalData = transData->terminalData;
+    transactionsDB[transData->transactionSequenceNumber].transState = transData->transState;
+    transactionsDB[transData->transactionSequenceNumber].transactionSequenceNumber = transData->transactionSequenceNumber++;
+
+    listSavedTransactions();
+
+    return SERVER_OK;
 }
 
 
-/*****************************************************************************************/
- /*    Function Description    : test all possible scenarios, happy-case, and worst-case scenarios. on isAmountAvailable function*/
- /*    Parameter in            : None */
- /*    Parameter inout         : None */
- /*    Parameter out           : None */
- /*    Return value            : None */
- /*    Requirment              : None */
- /*
- * Test casese 1000 , 1500 , 2000 , 2500 ,3000 , 3500 , 4000 , 4500 , 5000 , 5500 , 6000 , 6500 , 7000 , 7500 , 8000 , 8500 , 9000
- *             9500 , 10000 , 10500 
- * balance set to 8000
- */
- /*****************************************************************************************/
-void isAmountAvailableTest(void)
+/*
+ Name: listSavedTransactions
+ Input: void
+ Output: void
+ Description:
+*/
+void listSavedTransactions(void)
 {
-    static char counter;
-    ST_terminalData_t termData[20];
-    ST_accountsDB_t accountRefrence;
-    accountRefrence.balance = 8000.0;
-    EN_terminalError_t error = TERMINAL_OK;
-    termData[counter].maxTransAmount = 8000.0;
-    termData[counter].transAmount = 1000.0 + (500.0 * counter);
-    error = isAmountAvailable(&termData[counter], &accountRefrence);
-    printf("Tester Name: Matarawy\n");
-    printf("Test case : %d\n", counter + 1);
-    printf("Input Data: maxTransAmount = %2.f and transAmount = %2.f\n", accountRefrence.balance, termData[counter].transAmount);
-    if (error == LOW_BALANCE)
-        printf("Expected Result: Your amount is more than your acount balance\n");
-    else
-        printf("Expected Result: Server is OK\n");
-    if (error == SERVER_OK)
-        printf("Actual Result: Server is OK\n\n\n\n");
-    else
-        printf("Actual Result:  amount is more than the max amount \n\n\n\n");
+    for(uint8_t Loc_u8Index = 0; Loc_u8Index <= Glb_TransactionsDBIndex; Loc_u8Index++)
+    {
+        printf("\n");
 
-    counter++;
+        printf(" ##########################\n");
+        printf(" Transaction Sequence Number: %d\n", transactionsDB[Loc_u8Index].transactionSequenceNumber);
+        printf(" Transaction Date: %s\n", transactionsDB[Loc_u8Index].terminalData.transactionDate);
+        printf(" Transaction Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.transAmount);
+        printf(" Transaction State: %c\n", transactionsDB[Loc_u8Index].transState);
+        printf(" Terminal Max Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.maxTransAmount);
+        printf(" Cardholder Name: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardHolderName);
+        printf(" PAN: %s\n", transactionsDB[Loc_u8Index].cardHolderData.primaryAccountNumber);
+        printf(" Card Expiration Date: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardExpirationDate);
+        printf(" ##########################\n");
+
+        printf("\n");
+    }
 }
