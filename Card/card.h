@@ -54,6 +54,7 @@ typedef enum EN_cardError_t
  EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData);
  EN_cardError_t getCardPAN(ST_cardData_t *cardData);
 
+
 /**************************************************************************************************************************************/
 /*
 *							Prototype for the test functions 

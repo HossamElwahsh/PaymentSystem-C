@@ -30,7 +30,7 @@ void getCardPANTest(void);
 
 /******************** TERMINAL MODULE ********************/
 void getTransactionDateTest(void);
-// todo missing
+// todo to be completed Abdelrahman
 void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
 void isBelowMaxAmountTest(void);
@@ -40,8 +40,11 @@ void isValidCardPANTest(void);
 /******************** SERVER MODULE ********************/
 // todo missing
 void recieveTransactionDataTest(void);
-
-
+void isValidAccountTest(void);
 void isBlockedAccountTest(void);
+void isAmountAvailableTest(void);
+// todo implement
+void saveTransactionTest(void);
+void listSavedTransactionsTest(void);
 
 #endif //PAYMENTSYSTEM_TEST_H

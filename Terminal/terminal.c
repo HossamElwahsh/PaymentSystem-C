@@ -1,4 +1,4 @@
-/*
+/**
  * @Title      	: Terminal Module
  * @Filename   	: terminal.c
  * @Author     	: Mahmoud Mowafey
@@ -12,49 +12,20 @@
  *
  *
  */
-
-
 #include"terminal.h"
 
-/************************************************************************************************************
- * Function : getTransactionAmount()
- *//**
- * Description:
- * @Author     	: Mahmoud Mowafey
- * This function is used to test the getTransactionAmount(ST_terminalData_t *termData) function, to validate the terminal data.
- *
- *
- * @param [in]		termData is a pointer to the ST_terminalData_t structure that holding data
- * 					about the terminal such as transAmount, maxTransAmount, transactionGate.
- *
- * @return 			EN_terminalError_t is a enumeration that contains terminal module errors.
- *
- * \b Example:
- * @code
- *
- * EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData);
- *
- * @endcode
- *
- * @see getCardHolderNameTest()
- *
- *************************************************************************************************************************************/
+/******************************************************************************************************
+ * @file           : terminal.c
+ * @author         : Team 1
+ * @brief          : Contains the functionality of terminal
+ ******************************************************************************************************
+ */
 
+/* ********************** Includes Section Start ********************** */
+/* Terminal Module */
+#include "terminal.h"
+/* ********************** Includes Section End   ********************** */
 
-EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
-{
-	printf("\nEnter the amount for transaction: \t");
-	fflush(stdin);
-	fflush(stdout);
-	scanf("%f",&(termData->transAmount));
-    if ( (termData->transAmount) <= 0.0 ) 
-		return INVALID_AMOUNT;
-	else
-		return TERMINAL_OK;
-}
-
-
-/* ********************** structs and Enums Start *********************************************************** */
 
 
 /* ********************** Main Terminal Functions Start ******************************************** */
@@ -130,6 +101,7 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
      return TERMINAL_OK;
  }
 
+
 /**
  * This function takes the maximum allowed amount and stores it into terminal data
  * Note:
@@ -145,34 +117,87 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount) {
         return TERMINAL_OK;
     } else {
         return INVALID_MAX_AMOUNT;
-    }
-
+	}
 }
 
 
- /*****************************************************************************************/
- /*    Function Description    : This function compares the transaction amount with the terminal max allowed amount. */
- /*    Parameter in            : ST_terminalData_t* termData */
- /*    Parameter inout         : None */
- /*    Parameter out           : None */
- /*    Return value            : return EXCEED_MAX_AMOUNT If the transaction amount is larger than the terminal max allowed amount
- *                               return TERMINAL_OK otherwise;
- *    Requirment              : None */
- /*****************************************************************************************/
- EN_terminalError_t isBelowMaxAmount(ST_terminalData_t* termData)
- {
-     if (termData->transAmount > termData->maxTransAmount)
-         return EXCEED_MAX_AMOUNT;
-     return TERMINAL_OK;
- }
+/************************************************************************************************************
+ * Function : getTransactionAmount()
+ *//**
+ * Description:
+ * @Author     	: Mahmoud Mowafey
+ * This function is used to test the getTransactionAmount(ST_terminalData_t *termData) function, to validate the terminal data.
+ *
+ *
+ * @param [in]		termData is a pointer to the ST_terminalData_t structure that holding data
+ * 					about the terminal such as transAmount, maxTransAmount, transactionGate.
+ *
+ * @return 			EN_terminalError_t is a enumeration that contains terminal module errors.
+ *
+ * \b Example:
+ * @code
+ *
+ * EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData);
+ *
+ * @endcode
+ *
+ * @see getCardHolderNameTest()
+ *
+ *************************************************************************************************************************************/
 
 
-/* ********************** Main Terminal Functions End ********************************************** */
+EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
+{
+    printf("\nEnter the amount for transaction: \t");
+    fflush(stdin);
+    fflush(stdout);
+    scanf("%f",&(termData->transAmount));
+    if ( (termData->transAmount) <= 0.0 )
+        return INVALID_AMOUNT;
+    else
+        return TERMINAL_OK;
+}
 
+ /*
+ Name: isCardExpired
+ Input: Card Data structure, Terminal Data structure
+ Output: EN_terminalError_t Error or No Error
+ Description: 1. This function compares the card expiry date with the transaction date.
+			  2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
+				 else return TERMINAL_OK.
+*/
+EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *termData)
+{
+	/* Define local variable to set the error state, No Error */
+	EN_terminalError_t Loc_ErrorState = TERMINAL_OK;
+	/* Define local variable to store month on Card */
+	uint8_t Loc_CardMonth = ((cardData->cardExpirationDate[0] - '0') * 10) + (cardData->cardExpirationDate[1] - '0');
+	/* Define local variable to store year on Card */
+	uint8_t Loc_CardYear  = ((cardData->cardExpirationDate[3] - '0') * 10) + (cardData->cardExpirationDate[4] - '0');
+	/* Define local variable to store month of transaction */
+	uint8_t Loc_TransMonth = ((termData->transactionDate[3] - '0') * 10) + (termData->transactionDate[4] - '0');
+	/* Define local variable to store year of transaction */
+	uint8_t Loc_TransYear  = ((termData->transactionDate[8] - '0') * 10) + (termData->transactionDate[9] - '0');
 
-/* ********************** TEST Functions Start ***************************************************** */
-//void getTransactionAmountTest(void) todo
+	/* Check 1: cardYear < transYear */
+	if (Loc_CardYear < Loc_TransYear)
+	{
+		/* Update error state, Expired Card! */
+		Loc_ErrorState = EXPIRED_CARD;
+	}
+	/* Check 2: cardYear >= transYear */
+	else
+	{
+		/* Check 2.1: cardMonth < TransMonth */
+		if (Loc_CardYear == Loc_TransYear && Loc_CardMonth < Loc_TransMonth)
+		{
+			/* Update error state, Expired Card! */
+			Loc_ErrorState = EXPIRED_CARD;
+		}
+	}
 
+	return Loc_ErrorState;
+}
 
 /**
  * This function will check if the PAN is a Luhn number or not
@@ -180,10 +205,12 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount) {
  * @return INVALID_CARD if not Luhn number
  * @return TERMINAL_OK otherwise
  */
-EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData){
+EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData)
+{
     int sum = 0;
     int len = sizeof(cardData->primaryAccountNumber);
     int is_second = 0;
+
     for (int i = len - 1; i >= 0; i--) {
         int digit = cardData->primaryAccountNumber[i];
         if(digit == 0) continue; // card number is less than 20
@@ -213,3 +240,49 @@ EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData){
 }
 
 /* ********************** Main Terminal Functions End ********************************************** */
+
+
+/* ********************** TEST Functions Start ***************************************************** */
+
+ void getTransactionDateTest(void)
+ {
+    ST_terminalData_t termData;
+    EN_terminalError_t termError;
+
+    termError = getTransactionDate(&termData);
+
+	printf("\n");
+	printf("Tester name     : Tarek Gohry\n");
+	printf("Function name   : getTransactionDate\n\n");
+
+	printf("Test Case 1:\n");
+	printf("Input Data      : 01/02/zzzz\n");
+	printf("Expected Result : WRONG_DATE\n");
+	printf("Actual Result   : ");
+
+    if(termError == WRONG_DATE)
+    {
+        printf("WRONG_DATE\n");
+    }
+    else
+    {
+        // todo tarek
+    }
+ }
+
+
+ /*****************************************************************************************/
+ /*    Function Description    : This function compares the transaction amount with the terminal max allowed amount. */
+ /*    Parameter in            : ST_terminalData_t* termData */
+ /*    Parameter inout         : None */
+ /*    Parameter out           : None */
+ /*    Return value            : return EXCEED_MAX_AMOUNT If the transaction amount is larger than the terminal max allowed amount
+ *                               return TERMINAL_OK otherwise;
+ *    Requirment              : None */
+ /*****************************************************************************************/
+ EN_terminalError_t isBelowMaxAmount(ST_terminalData_t* termData)
+ {
+     if (termData->transAmount > termData->maxTransAmount)
+         return EXCEED_MAX_AMOUNT;
+     return TERMINAL_OK;
+ }

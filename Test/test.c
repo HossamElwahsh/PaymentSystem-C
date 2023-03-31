@@ -281,6 +281,25 @@ void getTransactionDateTest(void) {
     fclose(fp_test_cases);
 }
 
+
+void isCardExpiredTest(void)
+{
+    /* Variables to be used */
+    ST_cardData_t     cardData;
+    ST_terminalData_t terminalData;
+
+    printf("\n");
+    printf("Tester name     : Abdelrhman Walaa\n");
+    printf("Function name   : isCardExpired\n\n");
+
+    printf("Test Case 1:\n");
+    printf("Input Data      : \n");
+    printf("Expected Result : EXPIRED_CARD\n");
+    printf("Actual Result   : ");
+
+    //
+}
+
 void getTransactionAmountTest(void)
 {
     ST_terminalData_t MyTerminalData;
@@ -564,6 +583,58 @@ void isBlockedAccountTest(void)
     fclose(fp_test_cases);
 
 }
+
+void isValidAccountTest(void)
+{
+    printf("\n");
+    printf("Tester name     : Abdelrhman Walaa\n");
+    printf("Function name   : isValidAccount\n\n");
+
+    printf("Test Case 1:\n");
+    printf("Input Data      : \n");
+    printf("Expected Result : ACCOUNT_NOT_FOUND\n");
+    printf("Actual Result   : ");
+}
+
+void listSavedTransactionsTest(void)
+{
+    printf("\n");
+    printf("Tester name     : Abdelrhman Walaa\n");
+    printf("Function name   : listSavedTransactions\n\n");
+
+    printf("Test Case 1:\n");
+    printf("Input Data      : \n");
+    printf("Expected Result : ACCOUNT_NOT_FOUND\n");
+    printf("Actual Result   : ");
+}
+
+void isAmountAvailableTest(void) {
+    static char counter;
+    ST_terminalData_t termData[20];
+    ST_accountsDB_t accountRefrence;
+    accountRefrence.balance = 8000.0f;
+    EN_terminalError_t error = TERMINAL_OK;
+    termData[counter].maxTransAmount = 8000.0f;
+    termData[counter].transAmount = 1000.0f + (500.0f * counter);
+    error = isAmountAvailable(&termData[counter], &accountRefrence);
+    printf("Tester Name: Matarawy\n");
+    printf("Test case : %d\n", counter + 1);
+    printf("Input Data: maxTransAmount = %2.f and transAmount = %2.f\n", accountRefrence.balance,
+           termData[counter].transAmount);
+    if (error == LOW_BALANCE)
+        printf("Expected Result: Your amount is more than your acount balance\n");
+    else
+        printf("Expected Result: Server is OK\n");
+    if (error == SERVER_OK)
+        printf("Actual Result: Server is OK\n\n\n\n");
+    else
+        printf("Actual Result:  amount is more than the max amount \n\n\n\n");
+
+    counter++;
+
+    // todo fix missing code
+}
+
 
 /**
  * Call this from main.c to test all project modules
