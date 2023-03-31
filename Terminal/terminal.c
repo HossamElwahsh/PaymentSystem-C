@@ -77,6 +77,7 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 /* ********************** Includes Section End   ********************** */
 
 
+
 /* ********************** Main Terminal Functions Start ******************************************** */
 
  /*
@@ -150,6 +151,7 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
      return TERMINAL_OK;
  }
 
+
 /**
  * This function takes the maximum allowed amount and stores it into terminal data
  * Note:
@@ -164,6 +166,9 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
     if(maxAmount > 0) {
         termData->maxTransAmount = maxAmount;
         return TERMINAL_OK;
+	}
+}
+
  /*
  Name: isCardExpired
  Input: Card Data structure, Terminal Data structure
@@ -205,6 +210,46 @@ EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *ter
 	return Loc_ErrorState;
 }
 
+/**
+ * This function will check if the PAN is a Luhn number or not
+ * @param cardData user credit card data
+ * @return INVALID_CARD if not Luhn number
+ * @return TERMINAL_OK otherwise
+ */
+EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData)
+{
+    int sum = 0;
+    int len = sizeof(cardData->primaryAccountNumber);
+    int is_second = 0;
+
+    for (int i = len - 1; i >= 0; i--) {
+        int digit = cardData->primaryAccountNumber[i];
+        if(digit == 0) continue; // card number is less than 20
+        digit -= '0'; // convert number from char to integer
+
+        // double every second digit
+        if (is_second) {
+            digit *= 2;
+
+            // if result is 2 digits, sum the 2 digits into one
+            while (digit > 9) {
+                digit -= 9;
+            }
+        }
+
+        // add digit to total sum
+        sum += digit;
+
+        // flip is_second number flag
+        is_second = !is_second;
+    }
+
+    // check if sum of the digits is divisible by 10, therefore it is a valid Luhn number
+    // checksum is the last digit
+    return ((sum % 10 == 0) ? TERMINAL_OK : INVALID_CARD);
+
+}
+
 /* ********************** Main Terminal Functions End ********************************************** */
 
 
@@ -229,11 +274,13 @@ EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *ter
     if(termError == WRONG_DATE)
     {
         printf("WRONG_DATE\n");
+
     }
     else
     {
         return INVALID_MAX_AMOUNT;
     }
+
 
  void isCardExpired(void)
  {
@@ -259,6 +306,7 @@ EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *ter
 int main()
 {
     getTransactionDateTest();
+>>>>>>> Stashed changes
 }
 
 /**
