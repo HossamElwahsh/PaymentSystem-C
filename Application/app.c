@@ -3,6 +3,7 @@
 
 
 static uint32_t sequenceNumber;
+static uint8_t setMaxAmount_counter;
 
 void appStart(void)
 {
@@ -11,9 +12,25 @@ void appStart(void)
 	ST_accountsDB_t accountRefrence;
 	ST_transaction_t transData = { 0 };
 
- 	uint8_t state = WRONG_NAME;
+ 	uint8_t state = INVALID_MAX_AMOUNT;
+
+	// Set Max Amount 
+	if (setMaxAmount_counter == 0)
+	{
+		float max_amount = 0;
+		while (state == INVALID_AMOUNT)
+		{
+			printf("Enter system Max Amount\n");
+			fflush(stdin);
+			fflush(stdout);
+			scanf("%d\n", &max_amount);
+			state = setMaxAmount(&transData.terminalData, max_amount);
+			setMaxAmount_counter++;
+		}
+	}
 
 	// Get all card data
+	state = WRONG_NAME;
 	while(state == WRONG_NAME)
 		state = getCardHolderName(&transData.cardHolderData);
 	state = WRONG_EXP_DATE;
@@ -84,7 +101,7 @@ void appStart(void)
 			status = getTransactionAmount(&transData.terminalData);
 		}
 
-		// Check is below max account 
+		// Check is below max amount
 		status = isBelowMaxAmount(&transData.terminalData);
 		if (status == EXCEED_MAX_AMOUNT)
 		{
