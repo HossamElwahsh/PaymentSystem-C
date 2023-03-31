@@ -1,3 +1,0 @@
-H:/Sprints Automotive BootCamp B11/Sprints Automotive BootCamp B11/PaymentSystem-C/out/build/x64-Debug/CMakeFiles/PaymentSystem.dir
-H:/Sprints Automotive BootCamp B11/Sprints Automotive BootCamp B11/PaymentSystem-C/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-H:/Sprints Automotive BootCamp B11/Sprints Automotive BootCamp B11/PaymentSystem-C/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
