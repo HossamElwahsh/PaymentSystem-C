@@ -24,142 +24,191 @@ void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileTy
  */
 
 
- /** *******************************************************
-     ******************* TERMINAL MODULE *******************
-     *******************************************************/
+//region Card Module
+/** *******************************************************
+    ******************* CARD MODULE *******************
+    *******************************************************/
 
-void getTransactionAmountTest(void)
+
+/************************************************************************************************************
+* Function : getCardHolderNameTest()
+*//**
+ * Description:
+ *
+ * This function is used to test the getHolderName() function, to validate the card data.
+ *
+ * PRE-CONDITION:     the Card_Data exist and struct should be created, so that we can store/validate the card name.
+ * POST-CONDITION:    the cardName passed the listed test cases.
+ *
+ * @param [in]		void
+ *
+ * @return 			void
+ * \b Example:
+ * @code
+ * getCardHolderNameTest();
+ * @endcode
+ *
+ * @see getCardHolderName()
+ * Check the four cases:
+ * 1- if the entered name is pure alphabetic and number of characters is >= 20 and <=24 or not.
+ * 2- if the entered name contains an alphabetic characters or not.
+ * 3- if the entered name is Null or not.
+ * 4- if the entered name contains a non alphabetic characters or not.
+ *
+ ****************************************************************************************************************************************/
+
+void getCardHolderNameTest(void)
 {
-    ST_terminalData_t MyTerminalData;
+    ST_cardData_t MyCard;
 
-    uint8_t i, WrongName = 0, WrongString[] = "INVALID_AMOUNT, Please check your transaction amount!\n";
-    printf("Tester Name: Mahmoud_Mowafey\n");
-    printf("Function Name: getTransactionAmount\n\n\n");
-    for (i = 0; i < 5; i++)
+    uint8_t i, WrongString[] = "Wrong Name, Please check your entered name!\n";
+    printf("Tester Name:\tMahmoud Mowafey\n");
+    printf("Function Name:\tcardHolderName\n\n\n");
+    uint8_t WrongName = 0;
+    for ( i=0 ; i<5 ; i++ )
     {
-        WrongName = getTransactionAmount(&MyTerminalData);
-        printf("\nTest Case_%d: \n", i);
-        printf("Input Data: %f\n", MyTerminalData.maxTransAmount);
-        printf("Expected Result: Your transaction amount should be greater than Zero\n");
-        if (WrongName == INVALID_AMOUNT)
+        WrongName = getCardHolderName(&MyCard);
+        printf("\nTest Case_%d: \n",i);
+        printf("Input Data: %s\n",MyCard.cardHolderName);
+        printf("Expected Result: Your name's characters must be without non alphabetic and must be >20 && <24\n");
+        if( WrongName == WRONG_NAME )
         {
-            printf("Actual Result: %s\n", WrongString);
+            printf("Actual Result: %s\n",WrongString);
         }
         else
-            printf("Actual Result: Your operation is done\n");
+            printf("Actual Result: Your name is good\n");
     }
-
 }
 
-void getTransactionDateTest_old(void)
+
+/*****************************************************************************************/
+/*    Function Description    : This function to test getCardExpiryDate
+*								Check for the following cases
+*								- if the entered date is NULL
+*								- if the entered date containing numbers only
+*								- if the entered month is valid (Not equal 0 or more than 12)
+*								- if the entered date length is 5 */
+/*    Parameter in            : None */
+/*    Parameter inout         : None */
+/*    Parameter out           : None */
+/*    Return value            : None */
+/*    Requirment              : None*/
+/*
+* uint8_t test_cases[20][10] = { {0} , {"1s/22"}, {"f2/25"}, {"08/a0"}, {"11/2d"},{"11/25"} ,{"05/26"}, {"08/30"}, {"09/35"},\
+								   {"07/28"}, {"01/24"}, {"06*27"}, {"00/25"}, {"13/26"}, {"15/24"}, \
+								{"20/21"}, { "-12/20" }, { "+15/27" }, { "122/28" }, { "10/2023" } };
+*/
+/*****************************************************************************************/
+void getCardExpiryDateTest(void)
 {
-    ST_terminalData_t termData;
-    EN_terminalError_t termError;
+    // todo test cases
+    uint8_t expiry_date[10];
 
-    printf("\n");
-    printf("Tester name     : Tarek Gohry\n");
-    printf("Function name   : getTransactionDate\n");
-
-    /* Test Date Format Length */
-    printf("\nTest Case 1:\n");
-    printf("Input Data      : 01/02\n");
-    printf("Expected Result : WRONG_DATE\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
+    ST_cardData_t cardData;
+    EN_cardError_t error = CARD_OK;
+    static char counter1;
+    for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
     {
-        printf("WRONG_DATE\n");
+        cardData.cardExpirationDate[counter] = 0;
+    }
+    error = getCardExpiryDate(&cardData);
+    printf("Tester name : Matarawy\n");
+    printf("Function Name: getCardExpiryDate\n");
+    printf("Test Case %d:\n", counter1 + 1);
+    counter1++;
+    printf("Input Data: %s\n", expiry_date);
+    if (error == WRONG_EXP_DATE)
+    {
+        printf("Expected Result: there is an error in your date please check it again\n");
     }
     else
-    {
-        printf("TERMINAL_OK\n");
-    }
+        printf("Expected Result: %s\n", cardData.cardExpirationDate);
+    printf("Actual Result: %s\n", cardData.cardExpirationDate);
 
-    /* Test Year Format */
-    printf("\nTest Case 2:\n");
-    printf("Input Data      : 01/12/2022222\n");
-    printf("Expected Result : WRONG_DATE\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
-
-    /* Test Day Format */
-    printf("\nTest Case 3:\n");
-    printf("Input Data      : 33/02/2022\n");
-    printf("Expected Result : WRONG_DATE\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
-
-    /* Test Month Format */
-    printf("\nTest Case 4:\n");
-    printf("Input Data      : 02/15/2022\n");
-    printf("Expected Result : WRONG_DATE\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
-
-    /* Test Year Format */
-    printf("\nTest Case 5:\n");
-    printf("Input Data      : 02/12/20az\n");
-    printf("Expected Result : WRONG_DATE\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
-
-    /* Test Correct Date Format*/
-    printf("\nTest Case 6:\n");
-    printf("Input Data      : 01/02/2022\n");
-    printf("Expected Result : TERMINAL_OK\n");
-    termError = getTransactionDate(&termData);
-    printf("Actual Result   : ");
-
-    if (termError == WRONG_DATE)
-    {
-        printf("WRONG_DATE\n");
-    }
-    else
-    {
-        printf("TERMINAL_OK\n");
-    }
 }
+
 
 /***
  * Runs test cases for getCardPan
  */
+void getCardPANTest(void) {
+    // test cases init
+    char *test_cases_filename = CONCAT(TEST_DIR, "getCardPan.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    char testCase[256];
+
+    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tHossam Elwahsh\n");
+    printf("Function Name:\tgetCardPan\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE *fp_test_cases;
+    int i = 0;
+
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        FILE *fp_fake_stdin;
+        char *inputData;
+        char *expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data: %s\n", inputData);
+        printf("Expected: %s\n", expectedResult);
+
+        /************* push input data to stdin ***************/
+        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+        fprintf(fp_fake_stdin, "%s\n", inputData);
+        rewind(fp_fake_stdin);
+
+        /************* Execute test case ***************/
+        EN_cardError_t ret = getCardPAN(cardData);
+        // turn on console logs
+
+        printf("Actual Result: ");
+        switch (ret) {
+            case CARD_OK:
+                printf("CARD OK\n");
+                break;
+            case WRONG_PAN:
+                printf("WRONG_PAN\n");
+                break;
+        }
+
+        fclose(fp_fake_stdin);
+        i++; // next test case
+    }
+
+    free(cardData);
+    fclose(fp_test_cases);
+}
+
+//endregion
+
+/** ***************************************************
+******************* TERMINAL MODULE *******************
+*******************************************************/
+
 void getTransactionDateTest(void) {
     // test cases init
     char* test_cases_filename = CONCAT(TEST_DIR, "getTransactionDate.csv");
@@ -216,12 +265,12 @@ void getTransactionDateTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-        case WRONG_DATE:
-            printf("WRONG_DATE OK\n");
-            break;
-        case TERMINAL_OK:
-            printf("TERMINAL_OK\n");
-            break;
+            case WRONG_DATE:
+                printf("WRONG_DATE OK\n");
+                break;
+            case TERMINAL_OK:
+                printf("TERMINAL_OK\n");
+                break;
         }
 
         fclose(fp_fake_stdin);
@@ -231,6 +280,66 @@ void getTransactionDateTest(void) {
     free(terminalData);
     fclose(fp_test_cases);
 }
+
+void getTransactionAmountTest(void)
+{
+    ST_terminalData_t MyTerminalData;
+
+    uint8_t i, WrongName = 0, WrongString[] = "INVALID_AMOUNT, Please check your transaction amount!\n";
+    printf("Tester Name: Mahmoud_Mowafey\n");
+    printf("Function Name: getTransactionAmount\n\n\n");
+    for (i = 0; i < 5; i++)
+    {
+        WrongName = getTransactionAmount(&MyTerminalData);
+        printf("\nTest Case_%d: \n", i);
+        printf("Input Data: %f\n", MyTerminalData.maxTransAmount);
+        printf("Expected Result: Your transaction amount should be greater than Zero\n");
+        if (WrongName == INVALID_AMOUNT)
+        {
+            printf("Actual Result: %s\n", WrongString);
+        }
+        else
+            printf("Actual Result: Your operation is done\n");
+    }
+
+}
+
+/*****************************************************************************************/
+/*    Function Description    : test all possible scenarios, happy-case, and worst-case scenarios. on isBelowMaxAmount function*/
+/*    Parameter in            : None */
+/*    Parameter inout         : None */
+/*    Parameter out           : None */
+/*    Return value            : None */
+/*    Requirment              : None */
+/*
+* Test casese 1000 , 1500 , 2000 , 2500 ,3000 , 3500 , 4000 , 4500 , 5000 , 5500 , 6000 , 6500 , 7000 , 7500 , 8000 , 8500 , 9000
+*             9500 , 10000 , 10500
+* max_amount set to 8000
+*/
+/*****************************************************************************************/
+void isBelowMaxAmountTest(void)
+{
+    static char counter;
+    ST_terminalData_t termData[20];
+    EN_terminalError_t error = TERMINAL_OK;
+    termData[counter].maxTransAmount = 8000.0f;
+    termData[counter].transAmount = 1000.0f + (500.0 * counter);
+    error = isBelowMaxAmount(&termData[counter]);
+    printf("Tester Name: Matarawy\n");
+    printf("Test case : %d\n", counter + 1);
+    printf("Input Data: maxTransAmount = 8000 and transAmount = %2.f\n", termData[counter].transAmount);
+    if (error == EXCEED_MAX_AMOUNT)
+        printf("Expected Result: Your amount is more than the max amount\n");
+    else
+        printf("Expected Result: Your amount is OK\n");
+    if (error == TERMINAL_OK)
+        printf("Actual Result: Your amount is OK\n\n\n\n");
+    else
+        printf("Actual Result:  amount is more than the max amount \n\n\n\n");
+
+    counter++;
+}
+
 
 /**
  * Runs test cases for setMaxAmount()
@@ -284,12 +393,12 @@ void setMaxAmountTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-        case TERMINAL_OK:
-            printf("TERMINAL_OK\n");
-            break;
-        case INVALID_MAX_AMOUNT:
-            printf("INVALID_MAX_AMOUNT\n");
-            break;
+            case TERMINAL_OK:
+                printf("TERMINAL_OK\n");
+                break;
+            case INVALID_MAX_AMOUNT:
+                printf("INVALID_MAX_AMOUNT\n");
+                break;
         }
 
         i++; // next test case
@@ -303,14 +412,13 @@ void setMaxAmountTest(void) {
 /**
  * Runs test cases for isValidCardPAN()
  */
-
 void isValidCardPANTest(void) {
     // test cases init
-    char* test_cases_filename = CONCAT(TEST_DIR, "isValidCardPAN.csv");
+    char *test_cases_filename = CONCAT(TEST_DIR, "isValidCardPAN.csv");
     const char testCaseDelimiter[2] = ",";
 
     // test case data
-    ST_cardData_t* cardData = calloc(1, sizeof(ST_cardData_t));
+    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
     char testCase[256];
 
     // Print Test Header
@@ -322,7 +430,7 @@ void isValidCardPANTest(void) {
     // running test cases
 //    for (int i = 0; i < testCasesCount; ++i) {
 
-    FILE* fp_test_cases;
+    FILE *fp_test_cases;
     int i = 0;
 
     // redirect test case inputData to stdin
@@ -333,8 +441,8 @@ void isValidCardPANTest(void) {
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
-        char* inputData;
-        char* expectedResult;
+        char *inputData;
+        char *expectedResult;
 
         printf("\n-----------------------\n");
         printf("Test Case %d\n", i + 1);
@@ -347,7 +455,7 @@ void isValidCardPANTest(void) {
         printf("Expected: %s\n", expectedResult);
 
         // clear data
-        for (int j = 0; j < sizeof(cardData->primaryAccountNumber); ++j) {
+        for (int j = 0; j < sizeof (cardData->primaryAccountNumber); ++j) {
             cardData->primaryAccountNumber[j] = 0;
         }
 
@@ -361,12 +469,12 @@ void isValidCardPANTest(void) {
 
         printf("Actual Result: ");
         switch (ret) {
-        case TERMINAL_OK:
-            printf("TERMINAL_OK\n");
-            break;
-        case INVALID_CARD:
-            printf("INVALID_CARD\n");
-            break;
+            case TERMINAL_OK:
+                printf("TERMINAL_OK\n");
+                break;
+            case INVALID_CARD:
+                printf("INVALID_CARD\n");
+                break;
         }
 
         i++; // next test case
@@ -376,10 +484,9 @@ void isValidCardPANTest(void) {
     fclose(fp_test_cases);
 }
 
-
-/** *******************************************************
-    ******************* SERVER MODULE *******************
-    *******************************************************/
+/** ***************************************************
+******************* SERVER MODULE *******************
+*******************************************************/
 
     /**
      * Runs test cases for isBlockedAccount()

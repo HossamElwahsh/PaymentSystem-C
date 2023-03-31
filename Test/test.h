@@ -23,13 +23,25 @@
  /******************** CARD MODULE ********************/
 
  /** Test function for @see ../Card/card.c:getCardPan() */
+void getCardExpiryDateTest(void);
+void getCardHolderNameTest(void);
 void getCardPANTest(void);
+
 
 /******************** TERMINAL MODULE ********************/
 void getTransactionDateTest(void);
+// todo missing
+void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
+void isBelowMaxAmountTest(void);
 void setMaxAmountTest(void);
 void isValidCardPANTest(void);
+
+/******************** SERVER MODULE ********************/
+// todo missing
+void recieveTransactionDataTest(void);
+
+
 void isBlockedAccountTest(void);
 
 #endif //PAYMENTSYSTEM_TEST_H

@@ -60,8 +60,6 @@ typedef enum EN_cardError_t
 */
 /**************************************************************************************************************************************/
 
-void getCardHolderNameTest(void);
-void getCardExpiryDateTest(void);
 
 
 #define EXPIRY_DATE_MAX_SIZE	5

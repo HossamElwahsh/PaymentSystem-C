@@ -16,10 +16,6 @@
 #include "card.h"
 
 
-ST_cardData_t MyCard;
-uint8_t expiry_date[10];
-
-
 /************************************************************************************************************
  * Function : getCardHolderName()
  *//**
@@ -158,55 +154,6 @@ int main2()
 }
 
 
-/************************************************************************************************************
- * Function : getCardHolderNameTest()
- *//**
- * Description:
- *
- * This function is used to test the getHolderName() function, to validate the card data.
- *
- * PRE-CONDITION:     the Card_Data exist and struct should be created, so that we can store/validate the card name.
- * POST-CONDITION:    the cardName passed the listed test cases. 
- *
- * @param [in]		void
- *
- * @return 			void
- * \b Example:
- * @code
- * getCardHolderNameTest();
- * @endcode
- *
- * @see getCardHolderName()
- * Check the four cases:
- * 1- if the entered name is pure alphabetic and number of characters is >= 20 and <=24 or not.
- * 2- if the entered name contains an alphabetic characters or not.
- * 3- if the entered name is Null or not.
- * 4- if the entered name contains a non alphabetic characters or not.
- *
- ****************************************************************************************************************************************/
-
-void getCardHolderNameTest(void)
-{
-	uint8_t i, WrongString[] = "Wrong Name, Please check your entered name!\n";
-	printf("Tester Name: Mahmoud_Mowafey\n");
-	printf("Function Name: cardHolderName\n\n\n");
-	uint8_t WrongName = 0;
-	for ( i=0 ; i<5 ; i++ )
-	{
-		WrongName = getCardHolderName(&MyCard);
-		printf("\nTest Case_%d: \n",i);
-		printf("Input Data: %s\n",MyCard.cardHolderName);
-		printf("Expected Result: Your name's characters must be without non alphabetic and must be >20 && <24\n");
-		if( WrongName == WRONG_NAME )
-		{
-			printf("Actual Result: %s\n",WrongString);
-		}
-		else
-			printf("Actual Result: Your name is good\n");
-	}
-}
-
-
 /*****************************************************************************************/
 /*    Function Description    : This function will ask for the card expiry date and store it in card data.
 *								Card expiry date is 5 characters string in the format "MM/YY", e.g "05/25".*/
@@ -220,6 +167,8 @@ void getCardHolderNameTest(void)
 /*****************************************************************************************/
 EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 {
+    uint8_t expiry_date[10];
+
 	uint8_t month = 0;
 	uint8_t yearIsNotNumber = 0;
 	for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
@@ -263,49 +212,4 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 		}
 	}
 	return CARD_OK;
-}
-
-
-
-/*****************************************************************************************/
-/*    Function Description    : This function to test getCardExpiryDate 
-*								Check for the following cases
-*								- if the entered date is NULL
-*								- if the entered date containing numbers only
-*								- if the entered month is valid (Not equal 0 or more than 12)
-*								- if the entered date length is 5 */
-/*    Parameter in            : None */
-/*    Parameter inout         : None */
-/*    Parameter out           : None */
-/*    Return value            : None */
-/*    Requirment              : None*/
-/*
-* uint8_t test_cases[20][10] = { {0} , {"1s/22"}, {"f2/25"}, {"08/a0"}, {"11/2d"},{"11/25"} ,{"05/26"}, {"08/30"}, {"09/35"},\
-								   {"07/28"}, {"01/24"}, {"06*27"}, {"00/25"}, {"13/26"}, {"15/24"}, \
-								{"20/21"}, { "-12/20" }, { "+15/27" }, { "122/28" }, { "10/2023" } };
-*/
-/*****************************************************************************************/
-void getCardExpiryDateTest(void)
-{
-	ST_cardData_t cardData;
-	EN_cardError_t error = CARD_OK;
-	static char counter1;
-	for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
-	{
-		cardData.cardExpirationDate[counter] = 0;
-	}
-	error = getCardExpiryDate(&cardData);
-	printf("Tester name : Matarawy\n");
-	printf("Function Name: getCardExpiryDate\n");
-	printf("Test Case %d:\n", counter1 + 1);
-	counter1++;
-	printf("Input Data: %s\n", expiry_date);
-	if (error == WRONG_EXP_DATE)
-	{
-		printf("Expected Result: there is an error in your date please check it again\n");
-	}
-	else
-		printf("Expected Result: %s\n", cardData.cardExpirationDate);
-	printf("Actual Result: %s\n", cardData.cardExpirationDate);
-	
 }
