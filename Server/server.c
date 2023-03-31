@@ -1,4 +1,6 @@
 #include "server.h"#include <string.h>
+/* Standard Library */
+#include <string.h>
 
 /* Card Module */
 #include "../Card/card.h"

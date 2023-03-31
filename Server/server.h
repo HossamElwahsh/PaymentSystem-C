@@ -1,6 +1,9 @@
 #ifndef SERVER_H
 #define SERVER_H
+#ifndef SERVER_H_
+#define SERVER_H_
 
+<<<<<<< Updated upstream
 #include "../Card/card.h"
 #include "../Terminal/terminal.h"
 
@@ -44,6 +47,10 @@ EN_serverError_t saveTransaction(ST_transaction_t *transData);
 void listSavedTransactions(void);
 
 #endif#include "../Library/standard_types.h"
+#endif
+=======
+/* Library Module */
+#include "../Library/standard_types.h"
 
 typedef enum EN_flagState_t
 {
