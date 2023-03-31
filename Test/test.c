@@ -608,6 +608,20 @@ void listSavedTransactionsTest(void)
     printf("Actual Result   : ");
 }
 
+
+/*****************************************************************************************/
+/*    Function Description    : test all possible scenarios, happy-case, and worst-case scenarios. on isAmountAvailable function*/
+/*    Parameter in            : None */
+/*    Parameter inout         : None */
+/*    Parameter out           : None */
+/*    Return value            : None */
+/*    Requirment              : None */
+/*
+* Test casese 1000 , 1500 , 2000 , 2500 ,3000 , 3500 , 4000 , 4500 , 5000 , 5500 , 6000 , 6500 , 7000 , 7500 , 8000 , 8500 , 9000
+*             9500 , 10000 , 10500
+* balance set to 8000
+*/
+/*****************************************************************************************/
 void isAmountAvailableTest(void) {
     static char counter;
     ST_terminalData_t termData[20];
