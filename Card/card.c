@@ -47,7 +47,7 @@ EN_cardError_t getCardHolderName(ST_cardData_t *cardData)
 	printf("Enter Your Name: \t\t");
 	fflush(stdin);
 	fflush(stdout);
-	gets(cardData->cardHolderName);
+	gets((char *)cardData->cardHolderName);
 	uint8_t i=0, NonAlphabetic = 0;
 	while(cardData->cardHolderName[i] !=0)
 	{
@@ -74,10 +74,11 @@ EN_cardError_t getCardHolderName(ST_cardData_t *cardData)
 	 * Check if the entered name is greater than 20 and less than 24 characters.
 	 * Check if the entered name has a non alphabetic characters or not.
 	 * */
-	if( ( strlen(cardData->cardHolderName) == 0 ) ||
-			( strlen(cardData->cardHolderName) < 20 ) ||
-			( strlen(cardData->cardHolderName) > 24 ) ||
-			( NonAlphabetic == 1)
+    unsigned long long nameLength = strlen((char *)cardData->cardHolderName);
+	if(
+            (nameLength < 20 ) ||
+            (nameLength > 24 ) ||
+			(NonAlphabetic == 1)
 	)
 	{
 		return WRONG_NAME;
@@ -144,16 +145,6 @@ EN_cardError_t getCardPAN(ST_cardData_t *cardData){
 }
 
 
-#include <stdlib.h>
-int main2()
-{
-    ST_cardData_t * cardData = calloc(1, sizeof (ST_cardData_t));
-    getCardPAN(cardData);
-
-    return 0;
-}
-
-
 /*****************************************************************************************/
 /*    Function Description    : This function will ask for the card expiry date and store it in card data.
 *								Card expiry date is 5 characters string in the format "MM/YY", e.g "05/25".*/
@@ -169,8 +160,8 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 {
     uint8_t expiry_date[10];
 
-	uint8_t month = 0;
-	uint8_t yearIsNotNumber = 0;
+	uint8_t month;
+	uint8_t yearIsNotNumber;
 	for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
 	{
 		expiry_date[counter] = 0;
@@ -178,10 +169,10 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 	printf("Enter card expiry (MM/YY):\t");
 	fflush(stdin);
 	fflush(stdout);
-	gets(expiry_date);
+	gets((char *)expiry_date);
 
 	// Check the length of the date entered
-	if ((strlen(expiry_date) > EXPIRY_DATE_MAX_SIZE) || (strlen(expiry_date) == 0) || (strlen(expiry_date) < EXPIRY_DATE_MAX_SIZE))
+	if ((strlen((char *)expiry_date) > EXPIRY_DATE_MAX_SIZE) || (strlen((char *)expiry_date) == 0) || (strlen((char *)expiry_date) < EXPIRY_DATE_MAX_SIZE))
 		return WRONG_EXP_DATE;
 	else
 	{
