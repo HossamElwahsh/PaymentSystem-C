@@ -83,6 +83,7 @@ static uint8_t Glb_TransactionsDBIndex = 0;
 		return INTERNAL_SERVER_ERROR;
 	}
 
+    accountReference->balance -= transData->terminalData.transAmount;
     free(accountReference);
 	return APPROVED; 
  }
