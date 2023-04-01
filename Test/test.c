@@ -284,9 +284,9 @@ void getCardPANTest(void) {
         char *inputData;
         char *expectedResult;
 
-        printf("\n-----------------------\n");
+        printf("\n------------------------------------------------------------------------\n");
         printf("Test Case %d\n", i + 1);
-        printf("-----------------------\n");
+        printf("------------------------------------------------------------------------\n");
 
         inputData = strtok(testCase, testCaseDelimiter);
         expectedResult = strtok(NULL, testCaseDelimiter);
@@ -303,7 +303,7 @@ void getCardPANTest(void) {
         EN_cardError_t ret = getCardPAN(cardData);
         // turn on console logs
 
-        printf("Actual Result: ");
+        printf("\nActual Result:\t");
         switch (ret) {
             case CARD_OK:
                 printf("CARD OK\n");
@@ -761,7 +761,7 @@ void testAll()
     /** CARD MODULE */
     getCardExpiryDateTest();
     getCardHolderNameTest();
-//    getCardPANTest();
+    getCardPANTest();
 //    isBlockedAccountTest();
     /** TERMINAL MODULE */
 //     todo print terminal module testing
