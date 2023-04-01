@@ -17,7 +17,6 @@
 /* Standard Library */
 #include <string.h>
 #include "card.h"
-#include "server.h"
 #include "terminal.h"
 
 /* Accounts Database */
