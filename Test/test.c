@@ -759,12 +759,18 @@ void isAmountAvailableTest(void) {
 void testAll()
 {
     /** CARD MODULE */
+    printf("/***********************************\\");
+    printf("\tTESTING CARD MODULE\t");
+    printf("/***********************************\\");
     getCardExpiryDateTest();
     getCardHolderNameTest();
     getCardPANTest();
-//    isBlockedAccountTest();
+
     /** TERMINAL MODULE */
-//     todo print terminal module testing
+    printf("/***********************************\\");
+    printf("\tTESTING TERMINAL MODULE\t");
+    printf("/***********************************\\");
+    getTransactionDateTest();
 //    getTransactionDateTest();
 //    getTransactionAmountTest();
 //    setMaxAmountTest();
