@@ -53,7 +53,7 @@
      sprintf((char *)termData->transactionDate, "%02d/%02d/%04d",
              tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
-     printf("Current date: %s\n", termData->transactionDate);
+     printf(" Current date:\t\t%s\n", termData->transactionDate);
 
      /* Read Date */
 //     printf("Please enter transaction date: ");

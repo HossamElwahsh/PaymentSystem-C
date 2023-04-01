@@ -33,7 +33,7 @@ ST_accountsDB_t  accountsDB[255] =               /* Visa */                     
          {  25600.0f   , RUNNING, "4946085117749481"}, {  10662670.0f, RUNNING, "5424438206113309"},
          {  895000.0f  , RUNNING, "4946099683908835"}, {  1824.0f    , RUNNING, "5264166325336492"}};
 
-//uint8_t Glb_AccountsDBIndex = 0;
+uint8_t Glb_AccountsDBIndex = 0;
 
 /* Transactions Database */
 ST_transaction_t transactionsDB[255] = {0};
@@ -54,38 +54,37 @@ static uint8_t Glb_TransactionsDBIndex = 0;
 	- INTERNAL_SERVER_ERROR if a transaction can't be saved
 	- APPROVED Otherwise
  */
- EN_transState_t recieveTransactionData(ST_transaction_t *transData)
- {
-     ST_accountsDB_t * accountReference = calloc(1, sizeof(ST_accountsDB_t));
+ EN_transState_t recieveTransactionData(ST_transaction_t *transData) {
+     ST_accountsDB_t accountReference;
 
-    if(isValidAccount(&transData->cardHolderData, accountReference) == ACCOUNT_NOT_FOUND)
-	{
-        free(accountReference);
-		return FRAUD_CARD; 
-	}
+     if (isValidAccount(&transData->cardHolderData, &accountReference) == ACCOUNT_NOT_FOUND) {
+         transData->transState = FRAUD_CARD;
+         return FRAUD_CARD;
+     }
 
-	if(isBlockedAccount(accountReference) == BLOCKED_ACCOUNT)
-	{
-        free(accountReference);
-		return DECLINED_STOLEN_CARD;
-	}
+     if (isBlockedAccount(&accountReference) == BLOCKED_ACCOUNT) {
+         transData->transState = DECLINED_STOLEN_CARD;
+         return DECLINED_STOLEN_CARD;
+     }
 
-     if(isAmountAvailable(&transData->terminalData, accountReference) == LOW_BALANCE)
-     {
-         free(accountReference);
+     if (isAmountAvailable(&transData->terminalData, &accountReference) == LOW_BALANCE) {
+         transData->transState = DECLINED_INSUFFECIENT_FUND;
          return DECLINED_INSUFFECIENT_FUND;
      }
-	
-	if(saveTransaction(transData) != SERVER_OK)
-	{
-        free(accountReference);
-		return INTERNAL_SERVER_ERROR;
-	}
 
-    accountReference->balance -= transData->terminalData.transAmount;
-     printf("New Balance is %0.2f", accountReference->balance);
-    free(accountReference);
-	return APPROVED; 
+     transData->transState = APPROVED;
+     if (saveTransaction(transData) != SERVER_OK) {
+         transData->transState = INTERNAL_SERVER_ERROR;
+         return INTERNAL_SERVER_ERROR;
+     }
+
+     if(transData->transState == APPROVED)
+     {
+//         accountReference.balance -= transData->terminalData.transAmount;
+         accountsDB[Glb_AccountsDBIndex].balance -= transData->terminalData.transAmount;
+         printf("New Balance is %0.2f", accountsDB[Glb_AccountsDBIndex].balance);
+     }
+     return APPROVED;
  }
 
 /**
@@ -113,8 +112,9 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accoun
         {
             /* Copy Account details from accountsDB to passed pointer */
             *accountRefrence = accountsDB[Loc_Index];
+
             /* Update accountsDB Index */
-//            Glb_AccountsDBIndex = Loc_Index;
+            Glb_AccountsDBIndex = Loc_Index;
 
             /* Update flag state, Account is Found! */
             Loc_Flag = FLAG_UP;
@@ -200,14 +200,17 @@ EN_serverError_t isAmountAvailable(ST_terminalData_t* termData, ST_accountsDB_t*
 */
 EN_serverError_t saveTransaction(ST_transaction_t *transData)
 {
+    static int trxSeqNumber = 32500;
 
-    transactionsDB[transData->transactionSequenceNumber].cardHolderData = transData->cardHolderData;
-    transactionsDB[transData->transactionSequenceNumber].terminalData = transData->terminalData;
-    transactionsDB[transData->transactionSequenceNumber].transState = transData->transState;
-    transactionsDB[transData->transactionSequenceNumber].transactionSequenceNumber = transData->transactionSequenceNumber++;
+    transactionsDB[Glb_TransactionsDBIndex].cardHolderData = transData->cardHolderData;
+    transactionsDB[Glb_TransactionsDBIndex].terminalData = transData->terminalData;
+    transactionsDB[Glb_TransactionsDBIndex].transState = transData->transState;
+    transactionsDB[Glb_TransactionsDBIndex].transactionSequenceNumber = trxSeqNumber;
 
     listSavedTransactions();
 
+    trxSeqNumber++;
+    Glb_TransactionsDBIndex++;
     return SERVER_OK;
 }
 
@@ -228,7 +231,7 @@ void listSavedTransactions(void)
         printf(" Transaction Sequence Number: %d\n", transactionsDB[Loc_u8Index].transactionSequenceNumber);
         printf(" Transaction Date: %s\n", transactionsDB[Loc_u8Index].terminalData.transactionDate);
         printf(" Transaction Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.transAmount);
-        printf(" Transaction State: %d\n", transactionsDB[Loc_u8Index].transState);
+        printf(" Transaction State: %d\n", (uint32_t)transactionsDB[Loc_u8Index].transState);
         printf(" Terminal Max Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.maxTransAmount);
         printf(" Cardholder Name: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardHolderName);
         printf(" PAN: %s\n", transactionsDB[Loc_u8Index].cardHolderData.primaryAccountNumber);

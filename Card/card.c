@@ -169,7 +169,11 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 	printf("Enter card expiry (MM/YY):\t");
 	fflush(stdin);
 	fflush(stdout);
-	gets((char *)expiry_date);
+    fgets((char *)expiry_date, sizeof(expiry_date), stdin);
+
+    // remove trailing newline from string
+    char* ptr = strchr((char *)expiry_date, '\n');
+    if (ptr) *ptr = '\0';
 
 	// Check the length of the date entered
 	if ((strlen((char *)expiry_date) > EXPIRY_DATE_MAX_SIZE) || (strlen((char *)expiry_date) == 0) || (strlen((char *)expiry_date) < EXPIRY_DATE_MAX_SIZE))

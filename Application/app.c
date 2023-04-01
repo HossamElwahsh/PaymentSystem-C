@@ -101,7 +101,7 @@ void appStart(void)
             systemDeleteLine((uint8_t *)" Error! Wrong Transaction Date!");
         }
 
-        printf("Max withdrawal amount: %0.2f\n", terminalData.maxTransAmount);
+        printf(" Max withdrawal amount:\t%0.2f\n", terminalData.maxTransAmount);
 
         /* Get Terminal Data */
 
@@ -146,6 +146,7 @@ void appStart(void)
                     currentTransaction.transState = currentState;
                     saveTransaction(&currentTransaction);
                 }*/
+                sleep(2);
                 switch (currentState)
                 {
                     case FRAUD_CARD:
