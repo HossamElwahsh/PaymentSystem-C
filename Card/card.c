@@ -184,11 +184,11 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
     fgets((char *)expiry_date, sizeof(expiry_date), stdin);
 	uint8_t YearDigit_1 = expiry_date[3] - 48, YearDigit_2 = expiry_date[4] - 48;
 	uint8_t EnteredYear = (YearDigit_1 * 10 + YearDigit_2);
-	printf("EnteredYear year %d\n:", EnteredYear);
+//	printf("EnteredYear year %d\n:", EnteredYear);
 	if (EnteredYear > (Year + 5))
 	{
+        return WRONG_EXP_DATE;
 	}
-		return WRONG_EXP_DATE;
 
     // remove trailing newline from string
     char* ptr = strchr((char *)expiry_date, '\n');
