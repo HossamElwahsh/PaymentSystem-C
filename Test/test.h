@@ -34,7 +34,7 @@ void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
 void isBelowMaxAmountTest(void);
 void setMaxAmountTest(void);
-void isValidCardPANTest(void);
+void isValidCardPANTest(void); // (optional) Luhn Number Check
 
 /******************** SERVER MODULE ********************/
 // todo missing
