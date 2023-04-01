@@ -59,25 +59,76 @@ void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileTy
 
 void getCardHolderNameTest(void)
 {
-    ST_cardData_t MyCard;
+    // test cases init
+    char *test_cases_filename = CONCAT(TEST_DIR, "getCardHolderName.csv");
+    const char testCaseDelimiter[2] = ",";
 
-    uint8_t i, WrongString[] = "Wrong Name, Please check your entered name!\n";
+    // test case data
+    char testCase[256];
+
+    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
+//    ST_cardData_t MyCard;
+
+    // Print Test Header
+    printf("==================================\n");
     printf("Tester Name:\tMahmoud Mowafey\n");
-    printf("Function Name:\tcardHolderName\n\n\n");
-    uint8_t WrongName = 0;
-    for ( i=0 ; i<5 ; i++ )
-    {
-        WrongName = getCardHolderName(&MyCard);
-        printf("\nTest Case_%d: \n",i);
-        printf("Input Data: %s\n",MyCard.cardHolderName);
-        printf("Expected Result: Your name's characters must be without non alphabetic and must be >20 && <24\n");
-        if( WrongName == WRONG_NAME )
-        {
-            printf("Actual Result: %s\n",WrongString);
+    printf("Function Name:\tgetCardHolderName\n");
+    printf("==================================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE *fp_test_cases;
+    int i = 0;
+
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        FILE *fp_fake_stdin;
+        char *inputData;
+        char *expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data: %s\n", inputData);
+        printf("Expected: %s\n", expectedResult);
+
+        /************* push input data to stdin ***************/
+        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+        fprintf(fp_fake_stdin, "%s\n", inputData);
+        rewind(fp_fake_stdin);
+
+        /************* Execute test case ***************/
+        EN_cardError_t ret = getCardHolderName(cardData);
+        // turn on console logs
+
+        printf("Actual Result:\t");
+        switch (ret) {
+            case CARD_OK:
+                printf("CARD_OK\n");
+                break;
+            case WRONG_NAME:
+                printf("WRONG_NAME\n");
+                break;
         }
-        else
-            printf("Actual Result: Your name is good\n");
+
+        fclose(fp_fake_stdin);
+        i++; // next test case
     }
+
+    free(cardData);
+    fclose(fp_test_cases);
 }
 
 
@@ -708,9 +759,10 @@ void isAmountAvailableTest(void) {
 void testAll()
 {
     /** CARD MODULE */
-    // todo print card module testing
-   // getCardPANTest();
-    isBlockedAccountTest();
+    getCardExpiryDateTest();
+    getCardHolderNameTest();
+//    getCardPANTest();
+//    isBlockedAccountTest();
     /** TERMINAL MODULE */
 //     todo print terminal module testing
 //    getTransactionDateTest();
