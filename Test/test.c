@@ -1121,7 +1121,4 @@ void testAll()
     isBlockedAccountTest();
     isAmountAvailableTest();
     listSavedTransactionsTest();
-//    getTransactionDateTest();
-//    getTransactionAmountTest();
-//    setMaxAmountTest();
 }
