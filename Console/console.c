@@ -50,8 +50,8 @@ EN_consoleError_t systemPrintOut(uint8_t *string)
         showCursor(HIDE);
         /* Clear screen */
         system("cls");
-        /* Delay 0.5 sec. */
-        sleep(0.5);
+        /* Delay 1 sec. */
+        sleep(1);
 
         /* Print string */
         printf("\n\n");
