@@ -20,8 +20,7 @@ static void showCursor(EN_cursorState_t state)
         printf("\e[?25h");
     }
     /* Check 2: To hide the cursor */
-    else if (state == HIDE)
-    {
+    else {
         printf("\e[?25l");
     }
 }

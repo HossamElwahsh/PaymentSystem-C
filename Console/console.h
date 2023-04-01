@@ -2,7 +2,7 @@
 #define CONSOLE_H_
 
 #include <stdint.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 typedef enum EN_cursorState_t
 {
