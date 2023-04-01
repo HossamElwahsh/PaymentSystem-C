@@ -23,7 +23,7 @@ void appStart(void)
 			printf("Enter system Max Amount\n");
 			fflush(stdin);
 			fflush(stdout);
-			scanf("%d\n", &max_amount);
+			scanf("%f\n", &max_amount);
 			state = setMaxAmount(&transData.terminalData, max_amount);
 			setMaxAmount_counter++;
 		}
@@ -40,7 +40,7 @@ void appStart(void)
 	while (state == WRONG_PAN)
 		state = getCardPAN(&transData.cardHolderData);
 
-	// Get all transaction data
+	// Get all transaction date
 	state = WRONG_DATE;
 	while (state == WRONG_DATE)
 		state = getTransactionDate(&transData.terminalData);
@@ -54,6 +54,7 @@ void appStart(void)
 	*/
 
 	// Check is expired card
+	/*
 	uint8_t ex_yr = ((transData.cardHolderData.cardExpirationDate[3] - 48) * 10) + (transData.cardHolderData.cardExpirationDate[4] - 48);
 	uint8_t tr_yr = ((transData.terminalData.transactionDate[3] - 48) * 10) + (transData.terminalData.transactionDate[4] - 48);
 	if (tr_yr <= ex_yr)
@@ -86,11 +87,13 @@ void appStart(void)
 		transData.transactionSequenceNumber = sequenceNumber;
 		printf("Declined Expired card\n");
 		saveTransaction(&transData);
-	}
+	}*/
 
+
+	state = isCardExpired(&transData.cardHolderData, &transData.terminalData);
 
 	// If card is not Expired Continue
-	if (state == CARD_OK)
+	if (state == TERMINAL_OK)
 	{
 		uint8_t  status = INVALID_AMOUNT;
 		
@@ -105,7 +108,7 @@ void appStart(void)
 		status = isBelowMaxAmount(&transData.terminalData);
 		if (status == EXCEED_MAX_AMOUNT)
 		{
-			transData.transState = EXCEED_MAX_AMOUNT;
+			transData.transState = DECLINED_INSUFFECIENT_FUND;
 			sequenceNumber++;
 			transData.transactionSequenceNumber = sequenceNumber;
 			printf("Declined Amount Exceeding Limit\n");
@@ -113,7 +116,7 @@ void appStart(void)
 		}
 		else
 		{
-			state = 0;
+			/*state = 0;
 
 
 			// Check if the account is valid
@@ -126,6 +129,7 @@ void appStart(void)
 				sequenceNumber++;
 				transData.transactionSequenceNumber = sequenceNumber;
 				printf("Declined Account is not valid\n");
+				saveTransaction(&transData);
 			}
 			else {
 				// Valid
@@ -138,7 +142,7 @@ void appStart(void)
 					// Low balance 
 					sequenceNumber++;
 					transData.transactionSequenceNumber = sequenceNumber;
-					transData.transState = LOW_BALANCE;
+					transData.transState = DECLINED_INSUFFECIENT_FUND;
 					printf("Declined Insuffecient Funds\n");
 					saveTransaction(&transData);
 				}
@@ -151,12 +155,42 @@ void appStart(void)
 					transData.transState = APPROVED;
 					saveTransaction(&transData);
 				}
+			}*/
+			state = recieveTransactionData(&transData);
+			if (state = APPROVED)
+			{
+				printf("Done\n");
+			}
+			else
+			{
+				transData.transState = state;
+				saveTransaction(&transData);
+				switch (state)
+				{
+				case FRAUD_CARD:
+					printf("Account Not found \n");
+					break;
+				case DECLINED_STOLEN_CARD :
+					printf("Blocked Account or stolen card\n");
+					break;
+				case DECLINED_INSUFFECIENT_FUND :
+					printf("Declined insuffecient fund\n");
+					break;
+				}
 			}
 		}
 
 		
 		 
 
+	}
+	else
+	{
+		transData.transState = EXPIRED_CARD;
+		sequenceNumber++;
+		transData.transactionSequenceNumber = sequenceNumber;
+		printf("Declined Expired card\n");
+		saveTransaction(&transData);
 	}
 
 }

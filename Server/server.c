@@ -155,7 +155,7 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accoun
   ************************************************************************************************************/
 EN_serverError_t isBlockedAccount(ST_accountsDB_t* accountRefrence)
 {
-    if (accountRefrence->state)
+    if (accountRefrence->state == BLOCKED)
     {
         return BLOCKED_ACCOUNT;
     }
