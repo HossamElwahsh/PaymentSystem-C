@@ -1,183 +1,203 @@
+/* Standard Library */
+#include <stdio.h>
+#include <string.h>
+
+/* Library Module */
+//#include "../Library/standard_types.h"
+
+/* Console Module */
+#include "../Console/console.h"
+
+/* Card Module */
+#include "../Card/card.h"
+/* Terminal Module */
+#include "../Terminal/terminal.h"
+/* Server Module */
+#include "../Server/server.h"
+
+/* Application Module */
 #include "app.h"
-#include "../Test/test.h"
 
+extern ST_accountsDB_t accountsDB[255];
+extern uint8_t Glb_AccountsDBIndex;
 
-static uint32_t sequenceNumber;
-static uint8_t setMaxAmount_counter;
-static float max_amount = 0;
+/*
+ Name: appStart
+ Input: void
+ Output: void
+ Description: This function will be called by main to start the program.
+*/
+void appStart(void)
+{
+    /* Variables to be used */
+    ST_cardData_t     cardData;
+    ST_terminalData_t terminalData;
+    ST_transaction_t  currentTransaction;
 
-void appStart(void) {
-	//ST_cardData_t cardData;
-	//ST_terminalData_t termData;
-	ST_transaction_t transData = { 0 };
+    uint8_t Loc_UserInput;
 
- 	uint8_t state = INVALID_MAX_AMOUNT;
+    /* Set Terminal max Amount */
+    setMaxAmount(&terminalData, 4000.0f);
 
-	// Set Max Amount 
-	if (setMaxAmount_counter == 0)
-	{
-		while (state == INVALID_MAX_AMOUNT)
-		{
-			printf("Enter system Max Amount\n");
-			fflush(stdin);
-			scanf("%f\n", &max_amount);
-			state = setMaxAmount(&transData.terminalData, max_amount);
-			setMaxAmount_counter++;
-		}
-	}
+    /* Start of program */
 
-	// Get all card data
-	state = WRONG_NAME;
-	while(state == WRONG_NAME)
-		state = getCardHolderName(&transData.cardHolderData);
-	state = WRONG_EXP_DATE;
-	while (state == WRONG_EXP_DATE)
-		state = getCardExpiryDate(&transData.cardHolderData);
-	state = WRONG_PAN;
-	while (state == WRONG_PAN)
-		state = getCardPAN(&transData.cardHolderData);
+    /* Print out message: Starting the program */
+    systemPrintOut(" Starting the program....");
+    /* Print out message: Welcome */
+    systemPrintOut("\t\tWelcome!");
 
-	// Get all transaction date
-	state = WRONG_DATE;
-	while (state == WRONG_DATE)
-		state = getTransactionDate(&transData.terminalData);
+    while (1)
+    {   
+        /* Initialize Arrays with NULL character */
+        memset(cardData.cardHolderName, '\0', 25);
+        memset(cardData.primaryAccountNumber, '\0', 20);
+        memset(cardData.cardExpirationDate, '\0', 6);
+        memset(terminalData.transactionDate, '\0', 11);
 
-	// Check is expired card
-	/*
-	uint8_t ex_yr = ((transData.cardHolderData.cardExpirationDate[3] - 48) * 10) + (transData.cardHolderData.cardExpirationDate[4] - 48);
-	uint8_t tr_yr = ((transData.terminalData.transactionDate[3] - 48) * 10) + (transData.terminalData.transactionDate[4] - 48);
-	if (tr_yr <= ex_yr)
-	{
-		if (tr_yr == ex_yr)
-		{
-			uint8_t ex_mo = ((transData.cardHolderData.cardExpirationDate[0] - 48) * 10) + (transData.cardHolderData.cardExpirationDate[1] - 48);
-			uint8_t tr_mo = ((transData.terminalData.transactionDate[0] - 48) * 10) + (transData.terminalData.transactionDate[1] - 48);
-			if (tr_mo <= ex_mo)
-			{
-				state = CARD_OK;
-			}
-			else {
-				state = EXPIRED_CARD;
-				transData.transState = EXPIRED_CARD;
-				sequenceNumber++;
-				transData.transactionSequenceNumber = sequenceNumber;
-				printf("Declined Expired card\n");
-				saveTransaction(&transData);
-			}
-		}
-		else {
-			state = CARD_OK;
-		}
-	}
-	else {
-		state = EXPIRED_CARD;
-		transData.transState = EXPIRED_CARD;
-		sequenceNumber++;
-		transData.transactionSequenceNumber = sequenceNumber;
-		printf("Declined Expired card\n");
-		saveTransaction(&transData);
-	}*/
+        /* Clear Buffer */
+        fflush(stdin);
 
+        printf("\n\n");
+        printf("\t\t  -VBS-\n\t Virtual Banking System");
+        printf("\n\n");
 
-	state = isCardExpired(&transData.cardHolderData, &transData.terminalData);
+        /* Get Card Data */
+        printf("\n\n");
+        printf(" Insert Card Data");
+        printf("\n\n");
 
-	// If card is not Expired Continue
-	if (state == TERMINAL_OK)
-	{
-		uint8_t  status = INVALID_AMOUNT;
+        /* Loop: Until user enters correct Name */
+        while (getCardHolderName(&cardData) == WRONG_NAME)
+        {
+            systemDeleteLine(" Error! Wrong Name!");
+        }
 
-		// Get transaction amount
-		while (status == INVALID_AMOUNT)
-		{
-			status = getTransactionAmount(&transData.terminalData);
-		}
+        /* Loop: Until user enters correct Expiration Date */
+        while (getCardExpiryDate(&cardData) == WRONG_EXP_DATE)
+        {
+            systemDeleteLine(" Error! Wrong Expiration Date!");
+        }
 
-		// Check is below max amount
-		status = isBelowMaxAmount(&transData.terminalData);
-		if (status == EXCEED_MAX_AMOUNT)
-		{
-            printf("Declined Amount Exceeding ATM Limit\n");
-		}
-		else
-		{
-			/*state = 0;
+        /* Loop: Until user enters correct PAN */
+        while (getCardPAN(&cardData) == WRONG_PAN)
+        {
+            systemDeleteLine(" Error! Wrong PAN!");
+        }
 
+        /* Print out message: Processing */
+        systemPrintOut(" Processing....");
 
-			// Check if the account is valid
-			state = isValidAccount(&transData.cardHolderData,&accountRefrence);
+        printf("\n\n");
+        printf("\t\t  -VBS-\n\t Virtual Banking System");
+        printf("\n\n");
 
-			// Not valid
-			if (state == ACCOUNT_NOT_FOUND)
-			{
-				transData.transState = EXCEED_MAX_AMOUNT;
-				sequenceNumber++;
-				transData.transactionSequenceNumber = sequenceNumber;
-				printf("Declined Account is not valid\n");
-				saveTransaction(&transData);
-			}
-			else {
-				// Valid
-				status = 0 ;
+        /* Get Terminal Data */
+        printf("\n\n");
+        printf(" Insert Terminal Data");
+        printf("\n\n");
 
-				// Check if the amount is available
-				status = isAmountAvailable(&transData.terminalData, &accountRefrence);
-				if (status == LOW_BALANCE)
-				{
-					// Low balance 
-					sequenceNumber++;
-					transData.transactionSequenceNumber = sequenceNumber;
-					transData.transState = DECLINED_INSUFFECIENT_FUND;
-					printf("Declined Insuffecient Funds\n");
-					saveTransaction(&transData);
-				}
-				else {
-					// Available amount
-					state = 0;
-					accountRefrence.balance -= transData.terminalData.transAmount;
-					sequenceNumber++;
-					transData.transactionSequenceNumber = sequenceNumber;
-					transData.transState = APPROVED;
-					saveTransaction(&transData);
-				}
-			}*/
-			state = recieveTransactionData(&transData);
-			if (state == APPROVED)
-			{
-				printf("Transaction Approved.\n");
-			}
-			else
-			{
-				transData.transState = state;
-				saveTransaction(&transData);
-				switch (state)
-				{
-				case FRAUD_CARD:
-                        printf("Fraud card!");
-					break;
-				case DECLINED_STOLEN_CARD :
-					printf("Trx #%u refused, Blocked card\n", transData.transactionSequenceNumber);
-					break;
-				case DECLINED_INSUFFECIENT_FUND :
-					printf("Declined insufficient fund in account\n");
-					break;
-                case INTERNAL_SERVER_ERROR:
-                default:
-                        printf("Failed to save Trx. #%u, internal server error. \n",
-                               transData.transactionSequenceNumber);
+        /* Loop: Until user enters correct Transaction Date */
+        while (getTransactionDate(&terminalData) == WRONG_DATE)
+        {
+            systemDeleteLine(" Error! Wrong Transaction Date!");
+        }
+
+        /* Check 1: Card is Expired */
+        if (isCardExpired(&cardData, &terminalData) == EXPIRED_CARD)
+        {
+            /* Print out error: Expired Card */
+            systemPrintOut(" Error! Expired card, Transaction Declined.");
+        }
+        /* Check 2: Card is not Expired */
+        else
+        {
+            /* Loop: Until user enters valid Amount */
+            while (getTransactionAmount(&terminalData) == INVALID_AMOUNT)
+            {
+                systemDeleteLine(" Error! Wrong Amount!");
+            }
+
+            /* Check 2.1: User enters Amount exceeds Terminal Max Amount */
+            if (isBelowMaxAmount(&terminalData) == EXCEED_MAX_AMOUNT)
+            {
+                /* Print out error: Exceed Max Amount */
+                systemPrintOut(" Error! Exceed Max Amount!");
+            }
+            /* Check 2.2: User enters Amount does not exceed Max Amount */
+            else
+            {
+                /* Print out message: Processing */
+                systemPrintOut(" Processing....");
+
+                /* Save the current card data in the current Transaction structure */
+                currentTransaction.cardHolderData = cardData;
+                /* Save the current terminal data in the current Transaction structure */
+                currentTransaction.terminalData = terminalData;
+
+                uint8_t currentState = recieveTransactionData(&currentTransaction);
+
+                /* Check 2.2.1: Current state of Transaction  */
+                /*if(currentState == FRAUD_CARD || currentState == DECLINED_STOLEN_CARD
+                || currentState == DECLINED_INSUFFECIENT_FUND)
+                {
+                    currentTransaction.transState = currentState;
+                    saveTransaction(&currentTransaction);
+                }*/
+                switch (currentState)
+                {
+                    case FRAUD_CARD:
+                        /* Print out message: Declined Invalid Account */
+                        systemPrintOut(" Declined Invalid Account!");
                         break;
-				}
-			}
-		}
+                    case DECLINED_STOLEN_CARD:
+                        /* Print out message: Declined Blocked Account */
+                        systemPrintOut(" Declined Blocked Account!");
+                        break;
+                    case DECLINED_INSUFFECIENT_FUND:
+                        /* Print out message: Declined Insufficient Funds */
+                        systemPrintOut(" Declined Insufficient Funds!");
+                        break;
+                    case INTERNAL_SERVER_ERROR:
+                        /* Print out message: Internal Server Error */
+                        systemPrintOut(" Internal Server Error!");
+                        break;
+                    case APPROVED:
+                        /* Print out message: Approved */
+                        systemPrintOut(" Approved!");
+                        printf("\n Your balance is %.2f \n", accountsDB[Glb_AccountsDBIndex].balance);
+                        break;
+                }                
+            }
+        }
 
-	}
-	else
-	{
-		printf("Transaction declined, Reason: Expired card\n");
-	}
+        /* Clear Buffer */
+        fflush(stdin);
 
+        /* Confirm continue or exit */
+        printf("\n\n");
+        printf(" Press ANY KEY to continue or X to exit....  ");
+        scanf("%c", &Loc_UserInput);
+
+        /* Check 3: User pressed X */
+        if (Loc_UserInput == 'X' || Loc_UserInput == 'x')
+        {
+            /* break while(1) */
+            break;
+        }
+
+        /* Print out message: Processing */
+        systemPrintOut(" Processing....");
+    }
+
+    /* Print out message: Goodbye */
+    systemPrintOut("\t\tGoodbye!");
+    /* Print out message: Exiting the program */
+    systemPrintOut(" Exiting the program....");
+
+    /* End of program */
 }
 
 int main()
 {
-    listSavedTransactionsTest();
+    appStart();
 }

@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/* Library Module */
-#include "../Library/standard_types.h"
-
 /* Console Module */
 #include "console.h"
 

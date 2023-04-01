@@ -1,6 +1,8 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
+#include <stdint.h>
+
 typedef enum EN_cursorState_t
 {
 	HIDE, SHOW
