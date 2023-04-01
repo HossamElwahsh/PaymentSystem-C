@@ -30,7 +30,6 @@ void getCardPANTest(void);
 
 /******************** TERMINAL MODULE ********************/
 void getTransactionDateTest(void);
-// todo to be completed Abdelrahman
 void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
 void isBelowMaxAmountTest(void);

@@ -1,5 +1,5 @@
 #include "app.h"
-
+#include "../Test/test.h"
 
 
 static uint32_t sequenceNumber;
@@ -179,5 +179,5 @@ void appStart(void) {
 
 int main()
 {
-    appStart();
+    listSavedTransactionsTest();
 }
