@@ -43,19 +43,17 @@
 
  EN_terminalError_t getTransactionDate(ST_terminalData_t *termData)
  {
-     uint8_t i = 0;
-     uint8_t day = 0;
-     uint8_t month = 0;
-     uint16_t year = 0;
+     uint8_t day;
+     uint8_t month;
+     uint16_t year;
 
      time_t t = time(NULL);
      struct tm tm = *localtime(&t);
-//     char date_str[11]; // allocate a buffer for the date string
 
      sprintf((char *)termData->transactionDate, "%02d/%02d/%04d",
              tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
-//     printf("Current date: %s\n", termData->transactionDate);
+     printf("Current date: %s\n", termData->transactionDate);
 
      /* Read Date */
 //     printf("Please enter transaction date: ");

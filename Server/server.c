@@ -34,7 +34,7 @@ ST_accountsDB_t  accountsDB[255] =               /* Visa */                     
          {  25600.0f   , RUNNING, "4946085117749481"}, {  10662670.0f, RUNNING, "5424438206113309"},
          {  895000.0f  , RUNNING, "4946099683908835"}, {  1824.0f    , RUNNING, "5264166325336492"}};
 
-uint8_t Glb_AccountsDBIndex = 0;
+//uint8_t Glb_AccountsDBIndex = 0;
 
 /* Transactions Database */
 ST_transaction_t transactionsDB[255] = {0};
@@ -84,6 +84,7 @@ static uint8_t Glb_TransactionsDBIndex = 0;
 	}
 
     accountReference->balance -= transData->terminalData.transAmount;
+     printf("New Balance is %0.2f", accountReference->balance);
     free(accountReference);
 	return APPROVED; 
  }
@@ -109,12 +110,12 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accoun
     for (uint8_t Loc_Index = 0; Loc_Index < 255; Loc_Index++)
     {
         /* Check 1: Account is found */
-        if (!strcmp(cardData->primaryAccountNumber, accountsDB[Loc_Index].primaryAccountNumber))
+        if (!strcmp((char *)cardData->primaryAccountNumber, (char *)accountsDB[Loc_Index].primaryAccountNumber))
         {
             /* Copy Account details from accountsDB to passed pointer */
             *accountRefrence = accountsDB[Loc_Index];
             /* Update accountsDB Index */
-            Glb_AccountsDBIndex = Loc_Index;
+//            Glb_AccountsDBIndex = Loc_Index;
 
             /* Update flag state, Account is Found! */
             Loc_Flag = FLAG_UP;
