@@ -1088,6 +1088,76 @@ void isAmountAvailableTest(void) {
     fclose(fp_test_cases);
 }
 
+/**
+ * Runs test cases forrecieveTransactionDataTest()
+ */
+
+void recieveTransactionsDataTest(void)
+{
+    // Print Test Header
+    printf("====================================\n");
+    printf("Tester Name:\tTarek Gohary\n");
+    printf("Function Name:\trecieveTransactionDataTest()\n");
+    printf("====================================\n");
+
+    // test cases init
+    char* test_cases_filename = CONCAT(TEST_DIR, "receiveTransactionData.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test cases buffer
+    char testCase[256];
+
+    struct ST_transaction_t *transData = calloc(1, sizeof(ST_transaction_t));
+
+    FILE* fp_test_cases;
+    int i = 0;
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+        char* inputData;
+        char* expectedResult;
+
+        printf("\n-----------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-----------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data:\t%s\n", inputData);
+        printf("Expected:\t%s\n", expectedResult);
+
+        /************* Execute test case ***************/
+    EN_transState_t  ret = recieveTransactionData(transData);
+
+    switch (ret) {
+        printf("Actual Result:\t");
+        case FRAUD_CARD:
+            printf("FRAUD_CARD\n");
+            break;
+        case DECLINED_STOLEN_CARD:
+            printf("DECLINED_STOLEN_CARD\n");
+            break;
+        case DECLINED_INSUFFECIENT_FUND:
+            printf("DECLINED_INSUFFECIENT_FUND\n");
+            break;
+        case INTERNAL_SERVER_ERROR:
+            printf("INTERNAL_SERVER_ERROR\n");
+            break;
+        case APPROVED:
+            printf("APPROVED\n");
+            break;
+    }
+        i++; // next test case
+    }
+
+    fclose(fp_test_cases);
+}
 
 /**
  * Call this from main.c to test all project modules
@@ -1096,6 +1166,7 @@ void testAll()
 {
     // clear commandline
     system("cls");
+
 
     /** CARD MODULE */
     printf("\n\n");
@@ -1130,4 +1201,5 @@ void testAll()
     isBlockedAccountTest();
     isAmountAvailableTest();
     listSavedTransactionsTest();
+    recieveTransactionsDataTest();
 }
