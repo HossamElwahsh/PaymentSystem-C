@@ -16,4 +16,4 @@ add_executable(PaymentSystem
         Server/server.c
         Server/server.h
         Terminal/terminal.c
-        Terminal/terminal.h Test/test.c Test/test.h Console/console.c)
+        Terminal/terminal.h Test/test.c Test/test.h Console/console.c Lib/unistd.h)
