@@ -1089,10 +1089,10 @@ void isAmountAvailableTest(void) {
 }
 
 /**
- * Runs test cases forrecieveTransactionDataTest()
+ * Runs test cases for recieveTransactionDataTest()
  */
 
-void recieveTransactionsDataTest(void)
+void receiveTransactionDataTest(void)
 {
     // Print Test Header
     printf("====================================\n");
@@ -1107,7 +1107,8 @@ void recieveTransactionsDataTest(void)
     // test cases buffer
     char testCase[256];
 
-    struct ST_transaction_t *transData = calloc(1, sizeof(ST_transaction_t));
+    // allocate memory for transaction data
+    ST_transaction_t *transData = calloc(1, sizeof(ST_transaction_t));
 
     FILE* fp_test_cases;
     int i = 0;
@@ -1160,6 +1161,35 @@ void recieveTransactionsDataTest(void)
 }
 
 /**
+ * Runs test cases for saveTransaction()
+ */
+void saveTransactionTest(void)
+{
+    // Print Test Header
+    printf("====================================\n");
+    printf("Tester Name:\tTarek Gohary\n");
+    printf("Function Name:\tgetTransactionDate()\n");
+    printf("====================================\n");
+    printf("Test Case 1\n");
+    printf("Input Data:\tAll transaction data after validation\n");
+    printf("Expected Result:\tSERVER_OK\n");
+
+    // allocate memory for transaction data
+    ST_transaction_t * transData = calloc(1, sizeof(ST_terminalData_t));
+    EN_serverError_t ret = saveTransaction(transData);
+
+    switch (ret) {
+        case SERVER_OK:
+            printf("Actual Result:\tSERVER_OK\n");
+            break;
+    }
+
+    // free terminalData
+    free(transData);
+}
+
+
+/**
  * Call this from main.c to test all project modules
  */
 void testAll()
@@ -1201,5 +1231,6 @@ void testAll()
     isBlockedAccountTest();
     isAmountAvailableTest();
     listSavedTransactionsTest();
-    recieveTransactionsDataTest();
+    receiveTransactionDataTest();
+    saveTransactionTest();
 }
