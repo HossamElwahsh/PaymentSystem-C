@@ -159,7 +159,7 @@ void appStart(void)
 			state = recieveTransactionData(&transData);
 			if (state = APPROVED)
 			{
-				printf("Done\n");
+				printf("Transaction Done Successfully\n");
 			}
 			else
 			{
@@ -175,6 +175,11 @@ void appStart(void)
 					break;
 				case DECLINED_INSUFFECIENT_FUND :
 					printf("Declined insuffecient fund\n");
+					break;
+				case INTERNAL_SERVER_ERROR:
+					printf("INTERNAL SERVER ERROR\n");
+					break;
+				default:
 					break;
 				}
 			}
