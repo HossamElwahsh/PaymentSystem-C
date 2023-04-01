@@ -16,11 +16,10 @@ void appStart(void) {
 	// Set Max Amount 
 	if (setMaxAmount_counter == 0)
 	{
-		while (state == INVALID_AMOUNT)
+		while (state == INVALID_MAX_AMOUNT)
 		{
 			printf("Enter system Max Amount\n");
 			fflush(stdin);
-			fflush(stdout);
 			scanf("%f\n", &max_amount);
 			state = setMaxAmount(&transData.terminalData, max_amount);
 			setMaxAmount_counter++;
@@ -176,4 +175,9 @@ void appStart(void) {
 		printf("Transaction declined, Reason: Expired card\n");
 	}
 
+}
+
+int main()
+{
+    appStart();
 }
