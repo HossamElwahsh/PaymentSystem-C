@@ -38,7 +38,7 @@ void isValidCardPANTest(void);
 
 /******************** SERVER MODULE ********************/
 // todo missing
-void recieveTransactionDataTest(void);
+void receiveTransactionDataTest(void);
 void isValidAccountTest(void);
 void isBlockedAccountTest(void);
 void isAmountAvailableTest(void);
