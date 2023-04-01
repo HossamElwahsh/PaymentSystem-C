@@ -210,56 +210,41 @@ void getCardPANTest(void) {
 *******************************************************/
 
 void getTransactionDateTest(void) {
-    // test cases init
-    char* test_cases_filename = CONCAT(TEST_DIR, "getTransactionDate.csv");
-    const char testCaseDelimiter[2] = ",";
-
-    // test case data
-    char testCase[256];
-
-    ST_terminalData_t* terminalData = calloc(1, sizeof(ST_terminalData_t));
-
     // Print Test Header
-    printf("===============================\n");
+    printf("====================================\n");
     printf("Tester Name:\tTarek Gohary\n");
-    printf("Function Name:\tgetTransactionDate\n");
-    printf("===============================\n");
+    printf("Function Name:\tgetTransactionDate()\n");
+    printf("====================================\n");
+    printf("Test Case 1\n");
+    printf("Input Data:\tPC's current date programmatically\n");
+    printf("Expected Result:\tTERMINAL_OK\n");
 
-    // running test cases
-//    for (int i = 0; i < testCasesCount; ++i) {
+    // allocate memory for terminalData
+    ST_terminalData_t * terminalData = calloc(1, sizeof(ST_terminalData_t));
 
-    FILE* fp_test_cases;
-    int i = 0;
+    // fetch and validate PC date
+    EN_terminalError_t ret = getTransactionDate(terminalData);
 
+    switch (ret) {
 
-    // redirect test case inputData to stdin
-    fp_test_cases = fopen(test_cases_filename, "r");
+        case TERMINAL_OK:
+            printf("Actual Result:\tTERMINAL_OK\n");
+            break;
+        case WRONG_DATE:
+            printf("Actual Result:\tWRONG_DATE\n");
+            break;
+    }
 
-    // read test case inputData
-//        fgets(testCase, sizeof(testCase), fp_test_cases);
-    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
-        // split test case into tokens of input data & expected result (which was delimited by comma)
+    // free terminalData
+    free(terminalData);
+}
 
-        FILE* fp_fake_stdin;
-        char* inputData;
-        char* expectedResult;
-
-        printf("\n-----------------------\n");
-        printf("Test Case %d\n", i + 1);
-        printf("-----------------------\n");
-
-        inputData = strtok(testCase, testCaseDelimiter);
-        expectedResult = strtok(NULL, testCaseDelimiter);
-
-        printf("Input Data: %s\n", inputData);
-        printf("Expected: %s\n", expectedResult);
-
-        /************* push input data to stdin ***************/
+        /************* push input data to stdin ***************//*
         fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
         fprintf(fp_fake_stdin, "%s\n", inputData);
         rewind(fp_fake_stdin);
 
-        /************* Execute test case ***************/
+        *//************* Execute test case ***************//*
         EN_terminalError_t ret = getTransactionDate(terminalData);
         // turn on console logs
 
@@ -279,7 +264,7 @@ void getTransactionDateTest(void) {
 
     free(terminalData);
     fclose(fp_test_cases);
-}
+}*/
 
 
 void isCardExpiredTest(void)

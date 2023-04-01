@@ -4,12 +4,11 @@
 
 static uint32_t sequenceNumber;
 static uint8_t setMaxAmount_counter;
+static float max_amount = 0;
 
-void appStart(void)
-{
+void appStart(void) {
 	//ST_cardData_t cardData;
 	//ST_terminalData_t termData;
-	ST_accountsDB_t accountRefrence;
 	ST_transaction_t transData = { 0 };
 
  	uint8_t state = INVALID_MAX_AMOUNT;
@@ -17,7 +16,6 @@ void appStart(void)
 	// Set Max Amount 
 	if (setMaxAmount_counter == 0)
 	{
-		float max_amount = 0;
 		while (state == INVALID_AMOUNT)
 		{
 			printf("Enter system Max Amount\n");
@@ -44,14 +42,6 @@ void appStart(void)
 	state = WRONG_DATE;
 	while (state == WRONG_DATE)
 		state = getTransactionDate(&transData.terminalData);
-	
-	/*
-	// Get current time
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	int month = tm.tm_mon + 1;
-	int year = tm.tm_year + 1900;
-	*/
 
 	// Check is expired card
 	/*
@@ -96,7 +86,6 @@ void appStart(void)
 	if (state == TERMINAL_OK)
 	{
 		uint8_t  status = INVALID_AMOUNT;
-		
 
 		// Get transaction amount
 		while (status == INVALID_AMOUNT)
@@ -108,11 +97,7 @@ void appStart(void)
 		status = isBelowMaxAmount(&transData.terminalData);
 		if (status == EXCEED_MAX_AMOUNT)
 		{
-			transData.transState = DECLINED_INSUFFECIENT_FUND;
-			sequenceNumber++;
-			transData.transactionSequenceNumber = sequenceNumber;
-			printf("Declined Amount Exceeding Limit\n");
-			saveTransaction(&transData);
+            printf("Declined Amount Exceeding ATM Limit\n");
 		}
 		else
 		{
@@ -157,9 +142,9 @@ void appStart(void)
 				}
 			}*/
 			state = recieveTransactionData(&transData);
-			if (state = APPROVED)
+			if (state == APPROVED)
 			{
-				printf("Transaction Done Successfully\n");
+				printf("Transaction Approved.\n");
 			}
 			else
 			{
@@ -168,34 +153,27 @@ void appStart(void)
 				switch (state)
 				{
 				case FRAUD_CARD:
-					printf("Account Not found \n");
+                        printf("Fraud card!");
 					break;
 				case DECLINED_STOLEN_CARD :
-					printf("Blocked Account or stolen card\n");
+					printf("Trx #%u refused, Blocked card\n", transData.transactionSequenceNumber);
 					break;
 				case DECLINED_INSUFFECIENT_FUND :
-					printf("Declined insuffecient fund\n");
+					printf("Declined insufficient fund in account\n");
 					break;
-				case INTERNAL_SERVER_ERROR:
-					printf("INTERNAL SERVER ERROR\n");
-					break;
-				default:
-					break;
+                case INTERNAL_SERVER_ERROR:
+                default:
+                        printf("Failed to save Trx. #%u, internal server error. \n",
+                               transData.transactionSequenceNumber);
+                        break;
 				}
 			}
 		}
 
-		
-		 
-
 	}
 	else
 	{
-		transData.transState = EXPIRED_CARD;
-		sequenceNumber++;
-		transData.transactionSequenceNumber = sequenceNumber;
-		printf("Declined Expired card\n");
-		saveTransaction(&transData);
+		printf("Transaction declined, Reason: Expired card\n");
 	}
 
 }
