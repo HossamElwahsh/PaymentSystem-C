@@ -82,27 +82,23 @@ void getCardHolderNameTest(void)
 
 
 /*****************************************************************************************/
-/*    Function Description    : This function to test getCardExpiryDate
+/**    Function Description    : This function to test getCardExpiryDate
 *								Check for the following cases
 *								- if the entered date is NULL
 *								- if the entered date containing numbers only
 *								- if the entered month is valid (Not equal 0 or more than 12)
-*								- if the entered date length is 5 */
-/*    Parameter in            : None */
-/*    Parameter inout         : None */
-/*    Parameter out           : None */
-/*    Return value            : None */
-/*    Requirment              : None*/
-/*
-* uint8_t test_cases[20][10] = { {0} , {"1s/22"}, {"f2/25"}, {"08/a0"}, {"11/2d"},{"11/25"} ,{"05/26"}, {"08/30"}, {"09/35"},\
-								   {"07/28"}, {"01/24"}, {"06*27"}, {"00/25"}, {"13/26"}, {"15/24"}, \
-								{"20/21"}, { "-12/20" }, { "+15/27" }, { "122/28" }, { "10/2023" } };
-*/
-/*****************************************************************************************/
+*								- if the entered date length is 5
+*    Parameter in            : None
+*    Parameter inout         : None
+*    Parameter out           : None
+*    Return value            : None
+*    Requirment              : None
+*
+* Test cases @see "Test/TestCases/getCardExpireDate.csv"
+*****************************************************************************************/
 void getCardExpiryDateTest(void)
 {
-    // todo test cases
-    uint8_t expiry_date[10];
+/*    uint8_t expiry_date[10];
 
     ST_cardData_t cardData;
     EN_cardError_t error = CARD_OK;
@@ -123,7 +119,78 @@ void getCardExpiryDateTest(void)
     }
     else
         printf("Expected Result: %s\n", cardData.cardExpirationDate);
-    printf("Actual Result: %s\n", cardData.cardExpirationDate);
+    printf("Actual Result: %s\n", cardData.cardExpirationDate);*/
+
+    /** =============================================*/
+    // test cases init
+    char *test_cases_filename = CONCAT(TEST_DIR, "getCardExpiryDate.csv");
+    const char testCaseDelimiter[2] = ",";
+
+    // test case data
+    char testCase[256];
+
+    ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
+
+    // Print Test Header
+    printf("===============================\n");
+    printf("Tester Name:\tMatarawy\n");
+    printf("Function Name:\tgetCardExpiryDate\n");
+    printf("===============================\n");
+
+    // running test cases
+//    for (int i = 0; i < testCasesCount; ++i) {
+
+    FILE *fp_test_cases;
+    int i = 0;
+
+
+    // redirect test case inputData to stdin
+    fp_test_cases = fopen(test_cases_filename, "r");
+
+    // read test case inputData
+//        fgets(testCase, sizeof(testCase), fp_test_cases);
+    while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
+        // split test case into tokens of input data & expected result (which was delimited by comma)
+
+        FILE *fp_fake_stdin;
+        char *inputData;
+        char *expectedResult;
+
+        printf("\n-------------------------------\n");
+        printf("Test Case %d\n", i + 1);
+        printf("-------------------------------\n");
+
+        inputData = strtok(testCase, testCaseDelimiter);
+        expectedResult = strtok(NULL, testCaseDelimiter);
+
+        printf("Input Data:\t%s\n", inputData);
+        printf("Expected:\t%s\n", expectedResult);
+
+        /************* push input data to stdin ***************/
+        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
+        fprintf(fp_fake_stdin, "%s\n", inputData);
+        rewind(fp_fake_stdin);
+
+        /************* Execute test case ***************/
+        EN_cardError_t ret = getCardExpiryDate(&cardData);
+        // turn on console logs
+
+        printf("\nActual Result: ");
+        switch (ret) {
+            case WRONG_EXP_DATE:
+                printf("\tWRONG_EXP_DATE\n");
+                break;
+            case CARD_OK:
+                printf("\tCARD_OK\n");
+                break;
+        }
+
+        fclose(fp_fake_stdin);
+        i++; // next test case
+    }
+
+    free(cardData);
+    fclose(fp_test_cases);
 
 }
 
