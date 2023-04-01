@@ -16,7 +16,7 @@
 
 #include <stdint.h>
 #include <time.h>
-#include <card.h>
+#include "../Card/card.h"
 
 
 typedef struct ST_terminalData_t

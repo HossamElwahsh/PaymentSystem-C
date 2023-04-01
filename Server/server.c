@@ -14,11 +14,6 @@
  */
 #include "server.h"
 
-/* Standard Library */
-#include <string.h>
-#include "card.h"
-#include "terminal.h"
-
 /* Accounts Database */
 ST_accountsDB_t  accountsDB[255] =               /* Visa */                               /* MasterCard */
         /* Balance |  State |        PAN       */  /* Balance |  State |        PAN       */

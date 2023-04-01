@@ -1,9 +1,10 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "card.h"
-#include "terminal.h"
 #include <stdlib.h>
+#include <string.h>
+#include "../Card/card.h"
+#include "../Terminal/terminal.h"
 
 typedef enum EN_transState_t
 {

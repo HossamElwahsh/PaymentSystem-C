@@ -1136,8 +1136,8 @@ void receiveTransactionDataTest(void)
         /************* Execute test case ***************/
     EN_transState_t  ret = recieveTransactionData(transData);
 
-    switch (ret) {
         printf("Actual Result:\t");
+    switch (ret) {
         case FRAUD_CARD:
             printf("FRAUD_CARD\n");
             break;
