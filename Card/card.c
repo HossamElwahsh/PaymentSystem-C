@@ -44,7 +44,7 @@
 
 EN_cardError_t getCardHolderName(ST_cardData_t* cardData)
 {
-	printf("Enter Your Name: \t\t");
+	printf(" Enter Your Name: \t\t");
 	fflush(stdin);
 	fflush(stdout);
 	gets(cardData->cardHolderName);
@@ -104,7 +104,7 @@ EN_cardError_t getCardPAN(ST_cardData_t* cardData) {
 	char panStr[25] = { '\0' };
 
 	// prompt user to enter PAN
-	printf("Enter card PAN:\t\t\t");
+	printf(" Enter card PAN:\t\t");
 	fgets(panStr, sizeof(panStr), stdin);
 
 	// remove trailing newline from string
@@ -178,7 +178,7 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 	{
 		expiry_date[counter] = 0;
 	}
-	printf("Enter card expiry (MM/YY):\t");
+	printf(" Enter card expiry (MM/YY):\t");
 	fflush(stdin);
 	fflush(stdout);
     fgets((char *)expiry_date, sizeof(expiry_date), stdin);

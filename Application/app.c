@@ -17,6 +17,7 @@
 
 /* Application Module */
 #include "app.h"
+#include "../Test/test.h"
 
 //extern ST_accountsDB_t accountsDB[255];
 //extern uint8_t Glb_AccountsDBIndex;

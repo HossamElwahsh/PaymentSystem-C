@@ -14,7 +14,6 @@
  *
  */
 
-#define TERMINAL_MAX_AMOUNT 5000
 #include <stdint.h>
 #include <time.h>
 #include <card.h>

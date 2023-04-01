@@ -59,32 +59,32 @@ static uint8_t Glb_TransactionsDBIndex = 0;
 
      if (isValidAccount(&transData->cardHolderData, &accountReference) == ACCOUNT_NOT_FOUND) {
          transData->transState = FRAUD_CARD;
-         return FRAUD_CARD;
+         if(saveTransaction(transData) == SERVER_OK) return FRAUD_CARD;
      }
 
-     if (isBlockedAccount(&accountReference) == BLOCKED_ACCOUNT) {
+     else if (isBlockedAccount(&accountReference) == BLOCKED_ACCOUNT) {
          transData->transState = DECLINED_STOLEN_CARD;
-         return DECLINED_STOLEN_CARD;
+         if(saveTransaction(transData) == SERVER_OK) return DECLINED_STOLEN_CARD;
      }
 
-     if (isAmountAvailable(&transData->terminalData, &accountReference) == LOW_BALANCE) {
+     else if (isAmountAvailable(&transData->terminalData, &accountReference) == LOW_BALANCE) {
          transData->transState = DECLINED_INSUFFECIENT_FUND;
-         return DECLINED_INSUFFECIENT_FUND;
+         if(saveTransaction(transData) == SERVER_OK) return DECLINED_INSUFFECIENT_FUND;
      }
 
-     transData->transState = APPROVED;
-     if (saveTransaction(transData) != SERVER_OK) {
-         transData->transState = INTERNAL_SERVER_ERROR;
-         return INTERNAL_SERVER_ERROR;
-     }
-
-     if(transData->transState == APPROVED)
+     else// if(transData->transState == APPROVED)
      {
-//         accountReference.balance -= transData->terminalData.transAmount;
+         transData->transState = APPROVED;
          accountsDB[Glb_AccountsDBIndex].balance -= transData->terminalData.transAmount;
-         printf("New Balance is %0.2f", accountsDB[Glb_AccountsDBIndex].balance);
+         if(saveTransaction(transData) == SERVER_OK)
+         {
+             printf(" New Balance is %0.2f", accountsDB[Glb_AccountsDBIndex].balance);
+             return APPROVED;
+         }
      }
-     return APPROVED;
+
+     transData->transState = INTERNAL_SERVER_ERROR;
+     return INTERNAL_SERVER_ERROR;
  }
 
 /**
@@ -231,7 +231,24 @@ void listSavedTransactions(void)
         printf(" Transaction Sequence Number: %d\n", transactionsDB[Loc_u8Index].transactionSequenceNumber);
         printf(" Transaction Date: %s\n", transactionsDB[Loc_u8Index].terminalData.transactionDate);
         printf(" Transaction Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.transAmount);
-        printf(" Transaction State: %d\n", (uint32_t)transactionsDB[Loc_u8Index].transState);
+        printf(" Transaction State: ");
+        switch (transactionsDB[Loc_u8Index].transState) {
+            case APPROVED:
+                printf("APPROVED\n");
+                break;
+            case DECLINED_INSUFFECIENT_FUND:
+                printf("DECLINED_INSUFFECIENT_FUND\n");
+                break;
+            case DECLINED_STOLEN_CARD:
+                printf("DECLINED_STOLEN_CARD\n");
+                break;
+            case FRAUD_CARD:
+                printf("FRAUD_CARD\n");
+                break;
+            case INTERNAL_SERVER_ERROR:
+                printf("INTERNAL_SERVER_ERROR\n");
+                break;
+        }
         printf(" Terminal Max Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.maxTransAmount);
         printf(" Cardholder Name: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardHolderName);
         printf(" PAN: %s\n", transactionsDB[Loc_u8Index].cardHolderData.primaryAccountNumber);
