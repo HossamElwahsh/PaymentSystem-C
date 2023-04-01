@@ -48,12 +48,21 @@
      uint8_t month = 0;
      uint16_t year = 0;
 
+     time_t t = time(NULL);
+     struct tm tm = *localtime(&t);
+//     char date_str[11]; // allocate a buffer for the date string
+
+     sprintf((char *)termData->transactionDate, "%02d/%02d/%04d",
+             tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+
+//     printf("Current date: %s\n", termData->transactionDate);
+
      /* Read Date */
-     printf("Please enter transaction date: ");
-     gets(termData->transactionDate);
+//     printf("Please enter transaction date: ");
+//     gets(termData->transactionDate);
 
      /* Validate Date Length*/
-     if(strlen(termData->transactionDate) != 10)
+     if(strlen((char *)termData->transactionDate) != 10)
      {
          return WRONG_DATE;
      }

@@ -1,3 +1,5 @@
+#ifndef TERMINAL_H
+#define TERMINAL_H
 /**
  * @Title      	: Terminal Module
  * @Filename   	: terminal.h
@@ -8,14 +10,13 @@
  * @Target     	: General Purpose Processor / PCs
  * @Notes		: The code is written with ANSI_C Standard.
  *
- * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT- TEAM_1 at Sprints_Automotiv_BC_W11.
+ * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT - TEAM_1 at Sprints_Automotive_BC_W11.
  *
  */
 
-#ifndef TERMINAL_H_
-#define TERMINAL_H_
 #define TERMINAL_MAX_AMOUNT 5000
 #include <stdint.h>
+#include <time.h>
 #include <card.h>
 
 
@@ -39,4 +40,4 @@ EN_terminalError_t isBelowMaxAmount(ST_terminalData_t *termData);
 EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount);
 EN_terminalError_t isValidCardPAN(ST_cardData_t *cardData); // Optional
 
-#endif /* TERMINAL_H_ */
+#endif /* TERMINAL_H */

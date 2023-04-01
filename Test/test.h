@@ -1,12 +1,12 @@
-#ifndef PAYMENTSYSTEM_TEST_H
-#define PAYMENTSYSTEM_TEST_H
+#ifndef TEST_H
+#define TEST_H
 
 #include <stdlib.h>
 #include "card.h"
 #include "terminal.h"
 #include "server.h"
 
-#define TEST_DIR "../TestCases/"
+#define TEST_DIR "../Test/TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
 
 /**
@@ -30,7 +30,6 @@ void getCardPANTest(void);
 
 /******************** TERMINAL MODULE ********************/
 void getTransactionDateTest(void);
-// todo to be completed Abdelrahman
 void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
 void isBelowMaxAmountTest(void);
@@ -47,4 +46,7 @@ void isAmountAvailableTest(void);
 void saveTransactionTest(void);
 void listSavedTransactionsTest(void);
 
-#endif //PAYMENTSYSTEM_TEST_H
+/******************** RUN ALL TESTS ********************/
+void testAll();
+
+#endif //TEST_H

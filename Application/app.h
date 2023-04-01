@@ -1,18 +1,7 @@
-#ifndef APP_H
-#define APP_H
-#include "card.h"
-#include "server.h"
-#include "terminal.h"
-#include <time.h>
-#include<stdio.h>
+#ifndef APP_H_
+#define APP_H_
 
-
-
-
-#define EXPIRED_CARD  1
-
-
+/* Function Prototype */
 void appStart(void);
 
-
-#endif
+#endif /* APP_H_ */

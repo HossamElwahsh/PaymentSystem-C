@@ -155,7 +155,7 @@ EN_serverError_t isValidAccount(ST_cardData_t *cardData, ST_accountsDB_t *accoun
   ************************************************************************************************************/
 EN_serverError_t isBlockedAccount(ST_accountsDB_t* accountRefrence)
 {
-    if (accountRefrence->state)
+    if (accountRefrence->state == BLOCKED)
     {
         return BLOCKED_ACCOUNT;
     }
@@ -227,7 +227,7 @@ void listSavedTransactions(void)
         printf(" Transaction Sequence Number: %d\n", transactionsDB[Loc_u8Index].transactionSequenceNumber);
         printf(" Transaction Date: %s\n", transactionsDB[Loc_u8Index].terminalData.transactionDate);
         printf(" Transaction Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.transAmount);
-        printf(" Transaction State: %c\n", transactionsDB[Loc_u8Index].transState);
+        printf(" Transaction State: %d\n", transactionsDB[Loc_u8Index].transState);
         printf(" Terminal Max Amount: %.3f\n", transactionsDB[Loc_u8Index].terminalData.maxTransAmount);
         printf(" Cardholder Name: %s\n", transactionsDB[Loc_u8Index].cardHolderData.cardHolderName);
         printf(" PAN: %s\n", transactionsDB[Loc_u8Index].cardHolderData.primaryAccountNumber);
