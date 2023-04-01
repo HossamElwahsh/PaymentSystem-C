@@ -1,5 +1,5 @@
-#ifndef PAYMENTSYSTEM_TEST_H
-#define PAYMENTSYSTEM_TEST_H
+#ifndef TEST_H
+#define TEST_H
 
 #include <stdlib.h>
 #include "card.h"
@@ -46,4 +46,7 @@ void isAmountAvailableTest(void);
 void saveTransactionTest(void);
 void listSavedTransactionsTest(void);
 
-#endif //PAYMENTSYSTEM_TEST_H
+/******************** RUN ALL TESTS ********************/
+void testAll();
+
+#endif //TEST_H

@@ -1094,18 +1094,25 @@ void isAmountAvailableTest(void) {
  */
 void testAll()
 {
+    // clear commandline
+    system("cls");
+
     /** CARD MODULE */
-    printf("/***********************************\\");
-    printf("\tTESTING CARD MODULE\t");
-    printf("/***********************************\\");
+    printf("\n\n");
+    printf("/**********************************************************************\\\n");
+    printf("\t\t\tTESTING CARD MODULE\t\t\t\n");
+    printf("/**********************************************************************\\\n");
+    printf("\n\n");
     getCardExpiryDateTest();
     getCardHolderNameTest();
     getCardPANTest();
 
     /** TERMINAL MODULE */
-    printf("/***********************************\\");
-    printf("\tTESTING TERMINAL MODULE\t");
-    printf("/***********************************\\");
+    printf("\n\n");
+    printf("/**********************************************************************\\\n");
+    printf("\t\t\tTESTING TERMINAL MODULE\t\t\t\n");
+    printf("/**********************************************************************\\\n");
+    printf("\n\n");
     getTransactionDateTest();
     isCardExpiredTest();
     getTransactionAmountTest();
@@ -1114,9 +1121,11 @@ void testAll()
     isValidCardPANTest();
 
     /** SERVER MODULE */
-    printf("/***********************************\\");
-    printf("\tTESTING SERVER MODULE\t");
-    printf("/***********************************\\");
+    printf("\n\n");
+    printf("/**********************************************************************\\\n");
+    printf("\t\t\tTESTING SERVER MODULE\t\t\t\n");
+    printf("/**********************************************************************\\\n");
+    printf("\n\n");
     isValidAccountTest();
     isBlockedAccountTest();
     isAmountAvailableTest();
