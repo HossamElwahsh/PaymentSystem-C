@@ -11,6 +11,9 @@
 ### Flow Diagram
 ![flow](Assets/flow_chart.jpg)
 
+### Solution Explorer
+![soln_Explroer](Assets/solution_explorer.png)
+
 ### Project Tree
 ```
 D:.
@@ -25,6 +28,7 @@ D:.
 │
 ├───Assets
 │   │   flow_chart.jpg
+│   │   solution_explorer.png
 │   │
 │   └───Test Screenshots
 │           card_h.png
