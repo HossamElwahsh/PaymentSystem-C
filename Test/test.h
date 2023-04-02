@@ -39,12 +39,10 @@ void setMaxAmountTest(void);
 void isValidCardPANTest(void); // (optional) Luhn Number Check
 
 /******************** SERVER MODULE ********************/
-// todo missing
 void receiveTransactionDataTest(void);
 void isValidAccountTest(void);
 void isBlockedAccountTest(void);
 void isAmountAvailableTest(void);
-// todo implement
 void saveTransactionTest(void);
 void listSavedTransactionsTest(void);
 
