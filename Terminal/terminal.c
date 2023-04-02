@@ -153,13 +153,25 @@ EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
     fflush(stdout);
 
     uint8_t string[20];
-    scanf("%s",termData->transAmount);
-    atof(string, termData->transAmount);
-    
-    if ( (termData->transAmount) <= 0.0 )
-        return INVALID_AMOUNT;
+    scanf("%s", string);
+
+    if(strtof(string, &(termData->transAmount)) )
+    {
+        if ( (termData->transAmount) <= 0.0 )
+        {
+            return INVALID_AMOUNT;
+        }            
+        else
+        {
+            return TERMINAL_OK;
+        }            
+    }
     else
-        return TERMINAL_OK;
+    {
+        return INVALID_AMOUNT;
+    }
+    
+
 }
 
  /*
