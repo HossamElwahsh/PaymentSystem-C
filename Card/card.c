@@ -112,15 +112,11 @@ EN_cardError_t getCardPAN(ST_cardData_t* cardData) {
 	// remove trailing newline from string
 	char* ptr = strchr(panStr, '\n');
 	if (ptr) *ptr = '\0';
-	//    panStr[strlen(panStr)] = '\0';
 
 	// Format Check
 	// less than 16 or more than 19
-//    printf("Card length: %llu\n", strlen(panStr));
-//    printf("Card number: %s\n", panStr);
 	if (strlen(panStr) < 16 || strlen(panStr) > 19)
 	{
-		//        printf("WRONG_PAN length\n");
 		return WRONG_PAN;
 	}
 
@@ -132,14 +128,14 @@ EN_cardError_t getCardPAN(ST_cardData_t* cardData) {
 	// loop over all characters
 	for (int i = 0; i < strlen(panStr); i++) {
 
+        // check if any character isn't a digit
+        if (!isdigit(panStr[i]))
+        {
+            return WRONG_PAN;
+        }
+
 		// store PAN in `cardData`
 		cardData->primaryAccountNumber[i] = (uint8_t)(panStr[i]);
-
-		// check if any character isn't a digit
-		if (!isdigit(panStr[i]))
-		{
-			return WRONG_PAN;
-		}
 	}
 
 	return CARD_OK;
