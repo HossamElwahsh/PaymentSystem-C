@@ -13,29 +13,82 @@
 
 ### Project Tree
 ```
-PaymentSystem:.
-¦   .gitignore
-¦   LICENSE
-¦   README.md
-¦       
-+---Application
-¦       app.c
-¦       app.h
-¦       
-+---Assets
-¦       flow_chart.jpg
-¦       
-+---Card
-¦       card.c
-¦       card.h
-¦       
-+---Server
-¦       server.c
-¦       server.h
-¦       
-+---Terminal
-        terminal.c
-        terminal.h
+D:.
+│   .gitignore
+│   CMakeLists.txt
+│   LICENSE
+│   README.md
+│
+├───Application
+│       app.c
+│       app.h
+│
+├───Assets
+│   │   flow_chart.jpg
+│   │
+│   └───Test Screenshots
+│           card_getCardExiryDateTest_1.png
+│           card_getCardExiryDateTest_2.png
+│           card_getCardHolderName.jpg
+│           card_getCardPan.png
+|           ------------------------------------
+│           server_isAmountAvailable.png
+│           server_isBlockedAccount.png
+│           server_isValidAccount.png
+│           server_listSavedTransactionsTest.png
+│           server_receiveTransactionData_1.png
+│           server_receiveTransactionData_2.png
+│           server_receiveTransactionData_3.png
+│           server_receiveTransactionData_4.png
+│           server_saveTransactionTest.png
+|           ------------------------------------
+│           terminal_getTransactionAmount.png
+│           terminal_getTransactionDate.png
+│           terminal_isBelowMaxAmountTest_1.png
+│           terminal_isBelowMaxAmountTest_2.png
+│           terminal_isCardExpired.png
+│           terminal_isValidCardPAN.png
+│           terminal_setMaxAmount.png
+│
+├───Bin
+│       PaymentSystem.exe
+│
+├───Card
+│       card.c
+│       card.h
+│
+|
+├───Console
+│       console.c
+│       console.h
+│
+├───Server
+│       server.c
+│       server.h
+│
+├───Terminal
+│       terminal.c
+│       terminal.h
+│
+└───Test
+    │   test.c
+    │   test.h
+    │
+    └───TestCases
+            getCardExpiryDate.csv
+            getCardHolderName.csv
+            getCardPan.csv
+            getTransactionAmount.csv
+            getTransactionDate.csv
+            isAmountAvailable.csv
+            isBelowMaxAmount.csv
+            isBlockedAccount.csv
+            isCardExpired.csv
+            isValidAccount.csv
+            isValidCardPAN.csv
+            receiveTransactionData.csv
+            setMaxAmount.csv
+
 ```
 
 ## More info
