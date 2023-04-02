@@ -12,11 +12,9 @@
   * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT- TEAM_1 at Sprints_Automotiv_BC_W11.
   *
   */
-
 #ifndef CARD_H_
 #define CARD_H_
-
-
+#define EXPIRY_DATE_MAX_SIZE	5
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,16 +52,6 @@ typedef enum EN_cardError_t
  EN_cardError_t getCardExpiryDate(ST_cardData_t *cardData);
  EN_cardError_t getCardPAN(ST_cardData_t *cardData);
 
-
-/**************************************************************************************************************************************/
-/*
-*							Prototype for the test functions 
-*/
-/**************************************************************************************************************************************/
-
-
-
-#define EXPIRY_DATE_MAX_SIZE	5
 
 #endif /* CARD_H_ */
 

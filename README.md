@@ -27,6 +27,12 @@ D:.
 │   │   flow_chart.jpg
 │   │
 │   └───Test Screenshots
+│           card_h.png
+│           terminal_h.png
+│           server_h.png
+│           console_h.png (helper)
+│           app_h.png
+|           ------------------------------------
 │           card_getCardExiryDateTest_1.png
 │           card_getCardExiryDateTest_2.png
 │           card_getCardHolderName.jpg
