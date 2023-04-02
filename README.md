@@ -1,4 +1,6 @@
 # PaymentSystem-C
+Mini Console Payment System made with C
+
 
 ### Sprints - Team 1
 - Hossam Elwahsh
@@ -6,6 +8,9 @@
 - Tarek Gohry
 - Mahmoud Mowafey
 - Mahmoud Matarawy
+
+### Project walkthrough
+> https://www.youtube.com/playlist?list=PLQygVO5C3YjjlLX-_xOhRt0-dMKklFDg0
 
 ## Design
 ### Flow Diagram
