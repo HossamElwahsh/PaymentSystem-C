@@ -40,15 +40,15 @@
   *
   ************************************************************************************************************/
 
-
-
 EN_cardError_t getCardHolderName(ST_cardData_t* cardData)
 {
+	uint8_t i = 0, NonAlphabetic = 0;
+
 	printf(" Enter Your Name: \t\t");
 	fflush(stdin);
 	fflush(stdout);
-	gets(cardData->cardHolderName);
-	uint8_t i = 0, NonAlphabetic = 0;
+	fgets((char *)cardData->cardHolderName, sizeof(cardData->cardHolderName), stdin);
+	
 	while (cardData->cardHolderName[i] != 0)
 	{
 		/*
@@ -56,8 +56,7 @@ EN_cardError_t getCardHolderName(ST_cardData_t* cardData)
 		*/
 		if (((cardData->cardHolderName[i] >= 65) && (cardData->cardHolderName[i] <= 90)) ||
 			((cardData->cardHolderName[i] >= 97) && (cardData->cardHolderName[i] <= 122)) ||
-			((cardData->cardHolderName[i] == ' '))
-			)
+			((cardData->cardHolderName[i] == ' ')))
 		{
 			NonAlphabetic = 0;
 		}
@@ -74,11 +73,11 @@ EN_cardError_t getCardHolderName(ST_cardData_t* cardData)
 	 * Check if the entered name is greater than 20 and less than 24 characters.
 	 * Check if the entered name has a non alphabetic characters or not.
 	 * */
-	if ((strlen(cardData->cardHolderName) == 0) ||
-		(strlen(cardData->cardHolderName) < 20) ||
-		(strlen(cardData->cardHolderName) > 24) ||
-		(NonAlphabetic == 1)
-		)
+	int size = 0;
+
+	size = strlen((char *)cardData->cardHolderName);
+
+	if ((size < 20) || (size> 24) || (NonAlphabetic == 1))
 	{
 		return WRONG_NAME;
 	}
@@ -143,17 +142,6 @@ EN_cardError_t getCardPAN(ST_cardData_t* cardData) {
 	return CARD_OK;
 }
 
-
-#include <stdlib.h>
-int main2()
-{
-	ST_cardData_t* cardData = calloc(1, sizeof(ST_cardData_t));
-	getCardPAN(cardData);
-
-	return 0;
-}
-
-
 /*****************************************************************************************/
 /*    Function Description    : This function will ask for the card expiry date and store it in card data.
 *								Card expiry date is 5 characters string in the format "MM/YY", e.g "05/25".*/
@@ -168,16 +156,18 @@ int main2()
 EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 {
 	uint8_t expiry_date[10];
-	uint8_t month = 0;
-	uint8_t yearIsNotNumber = 0;
-	uint16_t year;
+	uint8_t month;
+	uint8_t yearIsNotNumber;
+
 	time_t t = time(NULL);
 	struct tm tm = *localtime(&t);
 	uint8_t Year = tm.tm_year - 100;
+
 	for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
 	{
 		expiry_date[counter] = 0;
 	}
+
 	printf(" Enter card expiry (MM/YY):\t");
 	fflush(stdin);
 	fflush(stdout);
@@ -195,19 +185,19 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
     if (ptr) *ptr = '\0';
 
 	// Check the length of the date entered
-	if ((strlen(expiry_date) > EXPIRY_DATE_MAX_SIZE) || (strlen(expiry_date) == 0) || (strlen(expiry_date) < EXPIRY_DATE_MAX_SIZE))
+	if ((strlen((char *) expiry_date) > EXPIRY_DATE_MAX_SIZE) || (strlen((char *) expiry_date) == 0) || (strlen((char *) expiry_date) < EXPIRY_DATE_MAX_SIZE))
 		return WRONG_EXP_DATE;
 	else
 	{
 		// Calculate the value of months entered in the date
 		month = ((expiry_date[0] - 48) * 10) + (expiry_date[1] - 48);
 
-
 		// Check all indexes of year entered is numbers only
 		if (expiry_date[3] >= '0' && expiry_date[3] <= '9')
 			yearIsNotNumber = 0;
 		else
 			yearIsNotNumber = 1;
+		
 		if (expiry_date[4] >= '0' && expiry_date[4] <= '9')
 			yearIsNotNumber = 0;
 		else
@@ -225,5 +215,6 @@ EN_cardError_t getCardExpiryDate(ST_cardData_t* cardData)
 			}
 		}
 	}
+	
 	return CARD_OK;
 }

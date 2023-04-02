@@ -1,34 +1,5 @@
-#include <io.h>
+
 #include "test.h"
-
-/**
- * Retrieves full file name for test case (input data / expected result) depending on fileType
- * @param fileType [in] 1 return input data file, 0 return expected result file
- * @param i [in] test case number (0 indexed)
- * @param test_dir [in] main test dir
- * @param testFilename [out] full filename for the file requested
- *//*
-void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileType)
-{
-    if(fileType)
-    {
-        sprintf(testFilename, "%s%d_in", test_dir, i+1);
-    }else{
-        sprintf(testFilename, "%s%d_ex", test_dir, i+1);
-    }
-//    printf("filename: %s\n", testFilename);
-}*/
-
-/***
- * Runs test cases for getCardPan
- */
-
-
-//region Card Module
-/** *******************************************************
-    ******************* CARD MODULE *******************
-    *******************************************************/
-
 
 /************************************************************************************************************
 * Function : getCardHolderNameTest()
@@ -59,24 +30,17 @@ void getTestFileName(int i, char * test_dir, char * testFilename, uint8_t fileTy
 
 void getCardHolderNameTest(void)
 {
-    // test cases init
     char *test_cases_filename = CONCAT(TEST_DIR, "getCardHolderName.csv");
     const char testCaseDelimiter[2] = ",";
 
-    // test cases buffer
     char testCase[256];
 
     ST_cardData_t *cardData = calloc(1, sizeof(ST_cardData_t));
-//    ST_cardData_t MyCard;
 
-    // Print Test Header
     printf("==================================\n");
     printf("Tester Name:\tMahmoud Mowafey\n");
     printf("Function Name:\tgetCardHolderName\n");
     printf("==================================\n");
-
-    // running test cases
-//    for (int i = 0; i < testCasesCount; ++i) {
 
     FILE *fp_test_cases;
     int i = 0;
@@ -223,7 +187,7 @@ void getCardExpiryDateTest(void)
         rewind(fp_fake_stdin);
 
         /************* Execute test case ***************/
-        EN_cardError_t ret = getCardExpiryDate(&cardData);
+        EN_cardError_t ret = getCardExpiryDate(cardData);
         // turn on console logs
 
         printf("\nActual Result:	");
@@ -242,7 +206,6 @@ void getCardExpiryDateTest(void)
 
     free(cardData);
     fclose(fp_test_cases);
-
 }
 
 

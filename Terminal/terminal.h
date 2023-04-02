@@ -1,5 +1,3 @@
-#ifndef TERMINAL_H
-#define TERMINAL_H
 /**
  * @Title      	: Terminal Module
  * @Filename   	: terminal.h
@@ -13,11 +11,12 @@
  * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT - TEAM_1 at Sprints_Automotive_BC_W11.
  *
  */
+#ifndef TERMINAL_H
+#define TERMINAL_H
 
 #include <stdint.h>
 #include <time.h>
 #include "../Card/card.h"
-
 
 typedef struct ST_terminalData_t
 {

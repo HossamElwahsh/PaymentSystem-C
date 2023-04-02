@@ -1,26 +1,20 @@
-/* Standard Library */
-#include <stdio.h>
-#include <string.h>
+/**
+ * @Title      	: Card Module
+ * @Filename   	: card.c
+ * @Authors     : Mahmoud Mowafey, Hossam Elwahsh
+ * @Origin Date	: Mar 28, 2023
+ * @Version		: 1.0.0
+ * @Compiler	: MinGW
+ * @Target     	: General Purpose Processor / PCs
+ * @Notes		: The code is written with ANSI_C Standard.
+ *
+ * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT- TEAM_1 at Sprints_Automotiv_BC_W11.
+ *
+ *
+ */
 
-/* Library Module */
-//#include "../Library/standard_types.h"
-
-/* Console Module */
-#include "../Console/console.h"
-
-/* Card Module */
-#include "../Card/card.h"
-/* Terminal Module */
-#include "../Terminal/terminal.h"
-/* Server Module */
-#include "../Server/server.h"
-
-/* Application Module */
+/* Application */
 #include "app.h"
-#include "../Test/test.h"
-
-//extern ST_accountsDB_t accountsDB[255];
-//extern uint8_t Glb_AccountsDBIndex;
 
 /*
  Name: appStart

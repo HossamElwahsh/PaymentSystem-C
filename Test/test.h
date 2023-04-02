@@ -2,6 +2,8 @@
 #define TEST_H
 
 #include <stdlib.h>
+#include <io.h>
+
 #include "../Card/card.h"
 #include "../Terminal/terminal.h"
 #include "../Server/server.h"

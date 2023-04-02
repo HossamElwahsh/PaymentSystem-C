@@ -1,8 +1,3 @@
-/* Standard Library */
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 /* Console Module */
 #include "console.h"
 
