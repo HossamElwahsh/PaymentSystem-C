@@ -48,7 +48,10 @@ EN_cardError_t getCardHolderName(ST_cardData_t* cardData)
 	fflush(stdin);
 	fflush(stdout);
 	fgets((char *)cardData->cardHolderName, sizeof(cardData->cardHolderName), stdin);
-	
+
+    char* ptr = strchr((char *)cardData->cardHolderName, '\n');
+    if (ptr) *ptr = '\0';
+
 	while (cardData->cardHolderName[i] != 0)
 	{
 		/*

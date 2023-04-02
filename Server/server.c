@@ -73,7 +73,7 @@ static uint8_t Glb_TransactionsDBIndex = 0;
          accountsDB[Glb_AccountsDBIndex].balance -= transData->terminalData.transAmount;
          if(saveTransaction(transData) == SERVER_OK)
          {
-             printf(" New Balance is %0.2f", accountsDB[Glb_AccountsDBIndex].balance);
+             printf(" New Balance is %0.2f\n", accountsDB[Glb_AccountsDBIndex].balance);
              return APPROVED;
          }
      }

@@ -77,7 +77,7 @@ void getCardHolderNameTest(void)
         EN_cardError_t ret = getCardHolderName(cardData);
         // turn on console logs
 
-        printf("Actual Result:\t");
+        printf("\nActual Result:\t");
         switch (ret) {
             case CARD_OK:
                 printf("CARD_OK\n");
@@ -344,9 +344,6 @@ void isCardExpiredTest(void) {
     printf("Function Name:\tisCardExpired\n");
     printf("==================================\n");
 
-    // running test cases
-//    for (int i = 0; i < testCasesCount; ++i) {
-
     FILE *fp_test_cases;
     int i = 0;
 
@@ -358,7 +355,6 @@ void isCardExpiredTest(void) {
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
-        FILE *fp_fake_stdin;
         char *inputData;
         char *expectedResult;
 
@@ -372,10 +368,9 @@ void isCardExpiredTest(void) {
         printf("Input Data:\t%s\n", inputData);
         printf("Expected:\t%s\n", expectedResult);
 
-        /************* push input data to stdin ***************/
-        fp_fake_stdin = freopen(CONCAT(TEST_DIR, "temp_stdin.txt"), "w+", stdin);
-        fprintf(fp_fake_stdin, "%s\n", inputData);
-        rewind(fp_fake_stdin);
+        for (int j = 0; j < strlen(inputData); ++j) {
+            cardData->cardExpirationDate[j] = inputData[j];
+        }
 
         /************* Execute test case ***************/
         EN_terminalError_t ret = isCardExpired(cardData, terminalData);
@@ -391,7 +386,6 @@ void isCardExpiredTest(void) {
                 break;
         }
 
-        fclose(fp_fake_stdin);
         i++; // next test case
     }
 
@@ -797,9 +791,6 @@ void isValidAccountTest(void)
     printf("Function Name:\tisValidAccount\n");
     printf("===============================\n");
 
-    // running test cases
-//    for (int i = 0; i < testCasesCount; ++i) {
-
     FILE *fp_test_cases;
     int i = 0;
 
@@ -807,7 +798,6 @@ void isValidAccountTest(void)
     fp_test_cases = fopen(test_cases_filename, "r");
 
     // read test case inputData
-//        fgets(testCase, sizeof(testCase), fp_test_cases);
     while (fgets(testCase, sizeof(testCase), fp_test_cases)) {
         // split test case into tokens of input data & expected result (which was delimited by comma)
 
@@ -919,16 +909,19 @@ void listSavedTransactionsTest(void)
             }
     };
 
-    printf("Tester name\t:Abdelrhman Walaa\n");
-    printf("Function name\t:listSavedTransactions\n\n");
+    printf("===============================\n");
+    printf("Tester Name:\tAbdelrhman Walaa\n");
+    printf("Function Name:\tlistSavedTransactions\n");
+    printf("===============================\n");
+
+    printf("----------------------------------\n");
+    printf("Test Case 1:\n");
+    printf("----------------------------------\n");
+    printf("Input Data:\ttransaction entry\n");
+    printf("Expected Result:\tlist of elements\n");
+    printf("Actual Result:\n\t");
 
     for (int i = 0; i < (sizeof(transactionsDB)/ sizeof(transactionsDB[0])); i++) {
-        printf("----------------------------------\n");
-        printf("Test Case %u:\n", i+1);
-        printf("----------------------------------\n");
-        printf("Input Data:\ttransaction entry\n");
-        printf("Expected Result:\tlist of elements\n");
-        printf("Actual Result:\n\t");
 
         /// Code snippet from server.c -> @listSavedTransactions()
         printf("\n");
@@ -1042,12 +1035,68 @@ void receiveTransactionDataTest(void)
     // test cases init
     char* test_cases_filename = CONCAT(TEST_DIR, "receiveTransactionData.csv");
     const char testCaseDelimiter[2] = ",";
-
     // test cases buffer
     char testCase[256];
 
-    // allocate memory for transaction data
-    ST_transaction_t *transData = calloc(1, sizeof(ST_transaction_t));
+    ST_transaction_t transactionsDB[4] = {
+            {
+                    {
+                            "Mohamed Salah Mohamed",
+                            "4728459258966333",
+                            "05/25"
+                    },
+                    {
+                            1000.0f,
+                            4000.0f,
+                            "03/10/2020"
+                    },
+                    APPROVED,
+                    1
+            },
+            {
+                    {
+                            "Alaa Eldin Bayoumi",
+                            "4946084897338284",
+                            "05/24"
+                    },
+                    {
+                            3500.0f,
+                            4000.0f,
+                            "05/10/2020"
+                    },
+                    DECLINED_STOLEN_CARD,
+                    2
+            },
+            {
+                    {
+                            "Aly Mamdouh Aly",
+                            "4728451059691228",
+                            "06/25"
+                    },
+                    {
+                            3200.0f,
+                            4000.0f,
+                            "06/11/2020"
+                    },
+                    APPROVED,
+                    3
+            },
+            {
+                    {
+                            "Mostafa Mohamed Mostafa",
+                            "4573762093153876",
+                            "07/26"
+                    },
+                    {
+                            2500.0f,
+                            4000.0f,
+                            "07/10/2021"
+                    },
+                    DECLINED_STOLEN_CARD,
+                    4
+            }
+    };
+
 
     FILE* fp_test_cases;
     int i = 0;
@@ -1072,8 +1121,9 @@ void receiveTransactionDataTest(void)
         printf("Input Data:\t%s\n", inputData);
         printf("Expected:\t%s\n", expectedResult);
 
+
         /************* Execute test case ***************/
-    EN_transState_t  ret = recieveTransactionData(transData);
+    EN_transState_t  ret = recieveTransactionData(&transactionsDB[i]);
 
         printf("Actual Result:\t");
     switch (ret) {
@@ -1113,18 +1163,27 @@ void saveTransactionTest(void)
     printf("Input Data:\tAll transaction data after validation\n");
     printf("Expected Result:\tSERVER_OK\n");
 
-    // allocate memory for transaction data
-    ST_transaction_t * transData = calloc(1, sizeof(ST_terminalData_t));
-    EN_serverError_t ret = saveTransaction(transData);
+   ST_transaction_t transData = {
+           {
+                   "Mohamed Salah Mohamed",
+                   "4728459258966333",
+                   "05/25"
+           },
+           {
+                   1000.0f,
+                   4000.0f,
+                   "03/10/2020"
+           },
+           APPROVED,
+           1
+   };
+    EN_serverError_t ret = saveTransaction(&transData);
 
     switch (ret) {
         case SERVER_OK:
             printf("Actual Result:\tSERVER_OK\n");
             break;
     }
-
-    // free terminalData
-    free(transData);
 }
 
 

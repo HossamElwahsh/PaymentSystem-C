@@ -144,42 +144,42 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
  * @see getCardHolderNameTest()
  *
  *************************************************************************************************************************************/
-
-
 EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 {
     printf("\nEnter the amount for transaction: \t");
     fflush(stdin);
     fflush(stdout);
 
-    uint8_t string[20];
-    scanf("%s", string);
+    float number;
+    char *endptr;
+    char input[20] = {'\0'};
+    fgets(input, sizeof(input), stdin);
+    // remove trailing newline from string
+    char* ptr = strchr(input, '\n');
+    if (ptr) *ptr = '\0';
 
-    if(strtof(string, &(termData->transAmount)) )
-    {
-        if ( (termData->transAmount) <= 0.0 )
-        {
+    number = strtof(input, &endptr);
+    if (endptr == input || *endptr != '\n') {
+        if (number <= 0.0) {
             return INVALID_AMOUNT;
-        }            
-        else
-        {
+        } else {
+            termData->transAmount = number;
             return TERMINAL_OK;
-        }            
+        }
+    } else {
+        return TERMINAL_OK;
     }
-    else
-    {
-        return INVALID_AMOUNT;
-    }
-    
-
 }
 
- /*
- Name: isCardExpired
- Input: Card Data structure, Terminal Data structure
- Output: EN_terminalError_t Error or No Error
- Description: 1. This function compares the card expiry date with the transaction date.
-			  2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
+ /**
+ * @author Abdelrahman Walaa
+ * Name: isCardExpired
+ * @param Card user card to check
+ * @param termData ATM terminal data
+ *
+ * @return EN_terminalError_t Error or No Error
+ * Description: 1. This function compares the card expiry date with the transaction date.
+			    2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
 				 else return TERMINAL_OK.
 */
 EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *termData)
