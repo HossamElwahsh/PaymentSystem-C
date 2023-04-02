@@ -1,25 +1,20 @@
-/* Standard Library */
-#include <stdio.h>
-#include <string.h>
+/**
+ * @Title      	: Card Module
+ * @Filename   	: card.c
+ * @Authors     : Mahmoud Mowafey, Hossam Elwahsh
+ * @Origin Date	: Mar 28, 2023
+ * @Version		: 1.0.0
+ * @Compiler	: MinGW
+ * @Target     	: General Purpose Processor / PCs
+ * @Notes		: The code is written with ANSI_C Standard.
+ *
+ * THIS SOFTWARE IS PROVIDED BY HACKER KERMIT- TEAM_1 at Sprints_Automotiv_BC_W11.
+ *
+ *
+ */
 
-/* Library Module */
-//#include "../Library/standard_types.h"
-
-/* Console Module */
-#include "../Console/console.h"
-
-/* Card Module */
-#include "../Card/card.h"
-/* Terminal Module */
-#include "../Terminal/terminal.h"
-/* Server Module */
-#include "../Server/server.h"
-
-/* Application Module */
+/* Application */
 #include "app.h"
-
-extern ST_accountsDB_t accountsDB[255];
-extern uint8_t Glb_AccountsDBIndex;
 
 /*
  Name: appStart
@@ -42,9 +37,9 @@ void appStart(void)
     /* Start of program */
 
     /* Print out message: Starting the program */
-    systemPrintOut(" Starting the program....");
+    systemPrintOut((uint8_t *)" Starting the program....");
     /* Print out message: Welcome */
-    systemPrintOut("\t\tWelcome!");
+    systemPrintOut((uint8_t *)"\t\tWelcome!");
 
     while (1)
     {   
@@ -69,44 +64,47 @@ void appStart(void)
         /* Loop: Until user enters correct Name */
         while (getCardHolderName(&cardData) == WRONG_NAME)
         {
-            systemDeleteLine(" Error! Wrong Name!");
+            systemDeleteLine((uint8_t *)" Error! Wrong Name!");
         }
 
         /* Loop: Until user enters correct Expiration Date */
         while (getCardExpiryDate(&cardData) == WRONG_EXP_DATE)
         {
-            systemDeleteLine(" Error! Wrong Expiration Date!");
+            systemDeleteLine((uint8_t *)" Error! Wrong Expiration Date!");
         }
 
         /* Loop: Until user enters correct PAN */
         while (getCardPAN(&cardData) == WRONG_PAN)
         {
-            systemDeleteLine(" Error! Wrong PAN!");
+            systemDeleteLine((uint8_t *)" Error! Wrong PAN!");
         }
 
         /* Print out message: Processing */
-        systemPrintOut(" Processing....");
+        systemPrintOut((uint8_t *)" Processing....");
 
         printf("\n\n");
         printf("\t\t  -VBS-\n\t Virtual Banking System");
         printf("\n\n");
 
-        /* Get Terminal Data */
         printf("\n\n");
-        printf(" Insert Terminal Data");
+        printf(" Welcome %s", cardData.cardHolderName);
         printf("\n\n");
 
         /* Loop: Until user enters correct Transaction Date */
         while (getTransactionDate(&terminalData) == WRONG_DATE)
         {
-            systemDeleteLine(" Error! Wrong Transaction Date!");
+            systemDeleteLine((uint8_t *)" Error! Wrong Transaction Date!");
         }
+
+        printf(" Max withdrawal amount:\t%0.2f\n", terminalData.maxTransAmount);
+
+        /* Get Terminal Data */
 
         /* Check 1: Card is Expired */
         if (isCardExpired(&cardData, &terminalData) == EXPIRED_CARD)
         {
             /* Print out error: Expired Card */
-            systemPrintOut(" Error! Expired card, Transaction Declined.");
+            systemPrintOut((uint8_t *)" Error! Expired card, Transaction Declined.");
         }
         /* Check 2: Card is not Expired */
         else
@@ -114,20 +112,20 @@ void appStart(void)
             /* Loop: Until user enters valid Amount */
             while (getTransactionAmount(&terminalData) == INVALID_AMOUNT)
             {
-                systemDeleteLine(" Error! Wrong Amount!");
+                systemDeleteLine((uint8_t *)" Error! Wrong Amount!");
             }
 
             /* Check 2.1: User enters Amount exceeds Terminal Max Amount */
             if (isBelowMaxAmount(&terminalData) == EXCEED_MAX_AMOUNT)
             {
                 /* Print out error: Exceed Max Amount */
-                systemPrintOut(" Error! Exceed Max Amount!");
+                systemPrintOut((uint8_t *)" Error! Exceed Max Amount!");
             }
             /* Check 2.2: User enters Amount does not exceed Max Amount */
             else
             {
                 /* Print out message: Processing */
-                systemPrintOut(" Processing....");
+                systemPrintOut((uint8_t *)" Processing....");
 
                 /* Save the current card data in the current Transaction structure */
                 currentTransaction.cardHolderData = cardData;
@@ -143,28 +141,30 @@ void appStart(void)
                     currentTransaction.transState = currentState;
                     saveTransaction(&currentTransaction);
                 }*/
+                sleep(2);
                 switch (currentState)
                 {
                     case FRAUD_CARD:
                         /* Print out message: Declined Invalid Account */
-                        systemPrintOut(" Declined Invalid Account!");
+                        systemPrintOut((uint8_t *)" Declined Invalid Account!");
                         break;
                     case DECLINED_STOLEN_CARD:
                         /* Print out message: Declined Blocked Account */
-                        systemPrintOut(" Declined Blocked Account!");
+                        systemPrintOut((uint8_t *)" Declined Blocked Account!");
                         break;
                     case DECLINED_INSUFFECIENT_FUND:
                         /* Print out message: Declined Insufficient Funds */
-                        systemPrintOut(" Declined Insufficient Funds!");
-                        break;
-                    case INTERNAL_SERVER_ERROR:
-                        /* Print out message: Internal Server Error */
-                        systemPrintOut(" Internal Server Error!");
+                        systemPrintOut((uint8_t *)" Declined Insufficient Funds!");
                         break;
                     case APPROVED:
                         /* Print out message: Approved */
-                        systemPrintOut(" Approved!");
-                        printf("\n Your balance is %.2f \n", accountsDB[Glb_AccountsDBIndex].balance);
+                        systemPrintOut((uint8_t *)" Approved!");
+//                        printf("\n Your new balance is %.2f \n", accountsDB[Glb_AccountsDBIndex].balance);
+                        break;
+                    default:
+                    case INTERNAL_SERVER_ERROR:
+                        /* Print out message: Internal Server Error */
+                        systemPrintOut((uint8_t *)" Internal Server Error!");
                         break;
                 }                
             }
@@ -186,13 +186,13 @@ void appStart(void)
         }
 
         /* Print out message: Processing */
-        systemPrintOut(" Processing....");
+        systemPrintOut((uint8_t *)" Processing....");
     }
 
     /* Print out message: Goodbye */
-    systemPrintOut("\t\tGoodbye!");
+    systemPrintOut((uint8_t *)"\t\tGoodbye!");
     /* Print out message: Exiting the program */
-    systemPrintOut(" Exiting the program....");
+    systemPrintOut((uint8_t *)" Exiting the program....");
 
     /* End of program */
 }

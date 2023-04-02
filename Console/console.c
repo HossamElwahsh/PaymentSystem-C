@@ -1,8 +1,3 @@
-/* Standard Library */
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
 /* Console Module */
 #include "console.h"
 
@@ -20,8 +15,7 @@ static void showCursor(EN_cursorState_t state)
         printf("\e[?25h");
     }
     /* Check 2: To hide the cursor */
-    else if (state == HIDE)
-    {
+    else {
         printf("\e[?25l");
     }
 }
@@ -50,8 +44,6 @@ EN_consoleError_t systemPrintOut(uint8_t *string)
         showCursor(HIDE);
         /* Clear screen */
         system("cls");
-        /* Delay 0.5 sec. */
-        sleep(0.5);
 
         /* Print string */
         printf("\n\n");

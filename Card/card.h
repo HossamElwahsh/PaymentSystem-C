@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
+#include <time.h>
 /**************************************************************************************************************************************/
 /*
 * Defines three members which specify the card structure. 

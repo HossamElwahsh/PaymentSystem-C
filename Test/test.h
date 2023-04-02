@@ -2,11 +2,13 @@
 #define TEST_H
 
 #include <stdlib.h>
-#include "card.h"
-#include "terminal.h"
-#include "server.h"
+#include <io.h>
 
-#define TEST_DIR "../Test/TestCases/"
+#include "../Card/card.h"
+#include "../Terminal/terminal.h"
+#include "../Server/server.h"
+
+#define TEST_DIR "Test/TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
 
 /**
@@ -34,15 +36,13 @@ void isCardExpiredTest(void);
 void getTransactionAmountTest(void);
 void isBelowMaxAmountTest(void);
 void setMaxAmountTest(void);
-void isValidCardPANTest(void);
+void isValidCardPANTest(void); // (optional) Luhn Number Check
 
 /******************** SERVER MODULE ********************/
-// todo missing
 void receiveTransactionDataTest(void);
 void isValidAccountTest(void);
 void isBlockedAccountTest(void);
 void isAmountAvailableTest(void);
-// todo implement
 void saveTransactionTest(void);
 void listSavedTransactionsTest(void);
 

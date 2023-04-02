@@ -1,7 +1,12 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
+/* Standard Library */
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 
 typedef enum EN_cursorState_t
 {

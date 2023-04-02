@@ -12,18 +12,12 @@
  *
  *
  */
-#include"terminal.h"
-
-/******************************************************************************************************
- * @file           : terminal.c
- * @author         : Team 1
- * @brief          : Contains the functionality of terminal
- ******************************************************************************************************
- */
 
 /* ********************** Includes Section Start ********************** */
+
 /* Terminal Module */
-#include "terminal.h"
+#include"terminal.h"
+
 /* ********************** Includes Section End   ********************** */
 
 
@@ -43,84 +37,81 @@
 
  EN_terminalError_t getTransactionDate(ST_terminalData_t *termData)
  {
-     uint8_t i = 0;
-     uint8_t day = 0;
-     uint8_t month = 0;
-     uint16_t year = 0;
+    uint8_t day;
+    uint8_t month;
+    uint16_t year;
 
-     time_t t = time(NULL);
-     struct tm tm = *localtime(&t);
-//     char date_str[11]; // allocate a buffer for the date string
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
 
-     sprintf((char *)termData->transactionDate, "%02d/%02d/%04d",
-             tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+    sprintf((char *) termData->transactionDate, "%02d/%02d/%04d", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
 
-//     printf("Current date: %s\n", termData->transactionDate);
+    printf(" Current date:\t\t%s\n", termData->transactionDate);
 
-     /* Read Date */
-//     printf("Please enter transaction date: ");
-//     gets(termData->transactionDate);
+    /* Validate Date Length*/
+    if(strlen((char *)termData->transactionDate) != 10)
+    {
+        return WRONG_DATE;
+    }
 
-     /* Validate Date Length*/
-     if(strlen((char *)termData->transactionDate) != 10)
-     {
-         return WRONG_DATE;
-     }
+    /* Validate Date Format */
+    if(termData->transactionDate[2] != '/' || termData->transactionDate[5] != '/')
+    {
+        return WRONG_DATE;
+    }
 
-     /* Validate Date Format */
-     if(termData->transactionDate[2] != '/' || termData->transactionDate[5] != '/')
-     {
-         return WRONG_DATE;
-     }
+    /* Validate Day */
+    day = termData->transactionDate[0] - '0';
+    day = (day*10) + (termData->transactionDate[1] - '0');
 
-     /* Validate Day */
-     day = termData->transactionDate[0] - '0';
-     day = (day*10) + (termData->transactionDate[1] - '0');
+    if(day<1 || day>31)
+    {
+        return WRONG_DATE;
+    }
 
-     if(day<1 || day>31)
-     {
-         return WRONG_DATE;
-     }
+    /* Validate Month */
+    month = termData->transactionDate[3] - '0';
+    month = (month*10) + (termData->transactionDate[4] - '0');
 
-     /* Validate Month */
-     month = termData->transactionDate[3] - '0';
-     month = (month*10) + (termData->transactionDate[4] - '0');
+    if(month<1 || month>12)
+    {
+        return WRONG_DATE;
+    }
 
-     if(month<1 || month>12)
-     {
-         return WRONG_DATE;
-     }
+    if(month==2 && day>29)
+    {
+        return WRONG_DATE;
+    }
 
-     if(month==2 && day>29)
-     {
-         return WRONG_DATE;
-     }
+    /* Validate Year */
+    year = termData->transactionDate[6] - '0';
+    year = (year*10) + (termData->transactionDate[7] - '0');
+    year = (year*10) + (termData->transactionDate[8] - '0');
+    year = (year*10) + (termData->transactionDate[9] - '0');
 
-     /* Validate Year */
-     year = termData->transactionDate[6] - '0';
-     year = (year*10) + (termData->transactionDate[7] - '0');
-     year = (year*10) + (termData->transactionDate[8] - '0');
-     year = (year*10) + (termData->transactionDate[9] - '0');
+    if(year<1900 || year>2100)
+    {
+        return WRONG_DATE;
+    }
 
-     if(year<1900 || year>2100)
-     {
-         return WRONG_DATE;
-     }
-
-     return TERMINAL_OK;
+    return TERMINAL_OK;
  }
 
 
 /**
+ * @author Hossam Elwahsh
  * This function takes the maximum allowed amount and stores it into terminal data
  * Note:
- * - Transaction max amount is a float number
+ * - Transaction max amount is a float number 
+ * 
  * @param termData [in,out] terminal data
  * @param maxAmount [in] max transaction amount
+ * 
  * @return INVALID_MAX_AMOUNT if max amount is less than or equal zero
  * @return TERMINAL_OK otherwise
  */
-EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount) {
+EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount)
+{
     if (maxAmount > 0) {
         termData->maxTransAmount = maxAmount;
         return TERMINAL_OK;
@@ -153,26 +144,42 @@ EN_terminalError_t setMaxAmount(ST_terminalData_t *termData, float maxAmount) {
  * @see getCardHolderNameTest()
  *
  *************************************************************************************************************************************/
-
-
 EN_terminalError_t getTransactionAmount(ST_terminalData_t *termData)
 {
     printf("\nEnter the amount for transaction: \t");
     fflush(stdin);
     fflush(stdout);
-    scanf("%f",&(termData->transAmount));
-    if ( (termData->transAmount) <= 0.0 )
-        return INVALID_AMOUNT;
-    else
+
+    float number;
+    char *endptr;
+    char input[20] = {'\0'};
+    fgets(input, sizeof(input), stdin);
+    // remove trailing newline from string
+    char* ptr = strchr(input, '\n');
+    if (ptr) *ptr = '\0';
+
+    number = strtof(input, &endptr);
+    if (endptr == input || *endptr != '\n') {
+        if (number <= 0.0) {
+            return INVALID_AMOUNT;
+        } else {
+            termData->transAmount = number;
+            return TERMINAL_OK;
+        }
+    } else {
         return TERMINAL_OK;
+    }
 }
 
- /*
- Name: isCardExpired
- Input: Card Data structure, Terminal Data structure
- Output: EN_terminalError_t Error or No Error
- Description: 1. This function compares the card expiry date with the transaction date.
-			  2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
+ /**
+ * @author Abdelrahman Walaa
+ * Name: isCardExpired
+ * @param Card user card to check
+ * @param termData ATM terminal data
+ *
+ * @return EN_terminalError_t Error or No Error
+ * Description: 1. This function compares the card expiry date with the transaction date.
+			    2. If the card expiration date is before the transaction date will return EXPIRED_CARD,
 				 else return TERMINAL_OK.
 */
 EN_terminalError_t isCardExpired(ST_cardData_t *cardData, ST_terminalData_t *termData)
