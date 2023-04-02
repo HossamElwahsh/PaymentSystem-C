@@ -113,30 +113,6 @@ void getCardHolderNameTest(void)
 *****************************************************************************************/
 void getCardExpiryDateTest(void)
 {
-/*    uint8_t expiry_date[10];
-
-    ST_cardData_t cardData;
-    EN_cardError_t error = CARD_OK;
-    static char counter1;
-    for (char counter = 0; counter <= EXPIRY_DATE_MAX_SIZE; counter++)
-    {
-        cardData.cardExpirationDate[counter] = 0;
-    }
-    error = getCardExpiryDate(&cardData);
-    printf("Tester name : Matarawy\n");
-    printf("Function Name: getCardExpiryDate\n");
-    printf("Test Case %d:\n", counter1 + 1);
-    counter1++;
-    printf("Input Data: %s\n", expiry_date);
-    if (error == WRONG_EXP_DATE)
-    {
-        printf("Expected Result: there is an error in your date please check it again\n");
-    }
-    else
-        printf("Expected Result: %s\n", cardData.cardExpirationDate);
-    printf("Actual Result:	%s\n", cardData.cardExpirationDate);*/
-
-    /** =============================================*/
     // test cases init
     char *test_cases_filename = CONCAT(TEST_DIR, "getCardExpiryDate.csv");
     const char testCaseDelimiter[2] = ",";
@@ -518,7 +494,7 @@ void isBelowMaxAmountTest(void)
 
     ST_terminalData_t *terminalData = calloc(1, sizeof(ST_terminalData_t));
 
-    setMaxAmount(terminalData, 8000.0f);
+    setMaxAmount(terminalData, 4000.0f);
 
     // Print Test Header
     printf("==================================\n");

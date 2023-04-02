@@ -8,7 +8,7 @@
 #include "../Terminal/terminal.h"
 #include "../Server/server.h"
 
-#define TEST_DIR "../Test/TestCases/"
+#define TEST_DIR "Test/TestCases/"
 #define CONCAT(STR1, STR2) STR1 STR2
 
 /**
